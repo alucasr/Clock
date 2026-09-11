@@ -54,4 +54,19 @@
     <string name="replaced_by_another_alarm">Sustituida por otra alarma</string>
     <string name="not_scheduled">No programado</string>
     <string name="alarm_timed_out">Alarma caducada</string>
+
+    <!-- Grupos de alarmas -->
+    <string name="group">Grupo</string>
+    <string name="no_group">Sin grupo</string>
+    <string name="manage_groups">Gestionar grupos</string>
+    <string name="all_groups">Todas</string>
+    <string name="new_group">Nuevo grupo</string>
+    <string name="rename_group">Renombrar grupo</string>
+    <string name="group_name">Nombre del grupo</string>
+    <string name="no_groups_found">No hay grupos</string>
+    <string name="delete_group_confirmation">Este grupo contiene %d alarma(s). ¿Qué quieres hacer con ellas?</string>
+    <string name="delete_group_and_alarms">Borrar el grupo y sus alarmas</string>
+    <string name="delete_group_keep_alarms">Borrar el grupo, dejar las alarmas sin grupo</string>
+    <string name="group_name_empty">Introduce un nombre de grupo</string>
+    <string name="group_already_exists">Ya existe un grupo con ese nombre</string>
 </resources>

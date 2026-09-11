@@ -36,6 +36,8 @@ class AlarmsAdapter(
     private var alarms: ArrayList<Alarm>,
     private val toggleAlarmInterface: ToggleAlarmInterface,
     recyclerView: MyRecyclerView,
+    private var groupTitles: Map<Int, String> = emptyMap(),
+    private var showGroupPrefix: Boolean = false,
     itemClick: (Any) -> Unit,
 ) : MyRecyclerViewAdapter(activity, recyclerView, itemClick), ItemTouchHelperContract {
 
@@ -108,8 +110,18 @@ class AlarmsAdapter(
     override fun getItemCount() = alarms.size
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateItems(newItems: ArrayList<Alarm>) {
+    fun updateItems(
+        newItems: ArrayList<Alarm>,
+        newGroupTitles: Map<Int, String>? = null,
+        newShowGroupPrefix: Boolean? = null,
+    ) {
         alarms = newItems
+        if (newGroupTitles != null) {
+            groupTitles = newGroupTitles
+        }
+        if (newShowGroupPrefix != null) {
+            showGroupPrefix = newShowGroupPrefix
+        }
         notifyDataSetChanged()
         finishActMode()
     }
@@ -154,9 +166,9 @@ class AlarmsAdapter(
             alarmDays.text = getAlarmSelectedDaysString(alarm)
             alarmDays.setTextColor(textColor)
 
-            alarmLabel.text = alarm.label
+            alarmLabel.text = buildDisplayLabel(alarm)
             alarmLabel.setTextColor(textColor)
-            alarmLabel.beVisibleIf(alarm.label.isNotEmpty())
+            alarmLabel.beVisibleIf(alarm.label.isNotEmpty() || (showGroupPrefix && alarm.groupId != null))
 
             alarmSwitch.isChecked = alarm.isEnabled
             alarmSwitch.setColors(textColor, properPrimaryColor, backgroundColor)
@@ -164,6 +176,16 @@ class AlarmsAdapter(
                 toggleAlarm(binding = this, alarm = alarm)
             }
         }
+    }
+
+    private fun buildDisplayLabel(alarm: Alarm): String {
+        val prefix = if (showGroupPrefix && alarm.groupId != null) {
+            val groupTitle = groupTitles[alarm.groupId] ?: return alarm.label
+            "($groupTitle) "
+        } else {
+            ""
+        }
+        return prefix + alarm.label
     }
 
     private fun toggleAlarm(binding: ItemAlarmBinding, alarm: Alarm) {

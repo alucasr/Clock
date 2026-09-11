@@ -11,10 +11,30 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <HorizontalScrollView
+            android:id="@+id/alarm_groups_filter_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:paddingVertical="@dimen/tiny_margin"
+            android:scrollbars="none"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <LinearLayout
+                android:id="@+id/alarm_groups_filter_holder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/small_margin" />
+
+        </HorizontalScrollView>
+
         <org.fossify.commons.views.MyRecyclerView
             android:id="@+id/alarms_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@id/alarm_groups_filter_scroll"
             android:clipToPadding="false"
             android:overScrollMode="ifContentScrolls"
             android:paddingBottom="@dimen/fab_list_bottom_padding"
@@ -26,6 +46,7 @@
             android:id="@+id/alarms_placeholder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/alarm_groups_filter_scroll"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/small_margin"
             android:alpha="0.8"

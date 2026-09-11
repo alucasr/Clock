@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/medium_margin">
+
+        <LinearLayout
+            android:id="@+id/manage_groups_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <org.fossify.commons.views.MyTextView
+            android:id="@+id/manage_groups_placeholder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="@dimen/activity_margin"
+            android:text="@string/no_groups_found"
+            android:textStyle="italic"
+            android:visibility="gone" />
+
+        <org.fossify.commons.views.MyTextView
+            android:id="@+id/manage_groups_add_new"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:drawablePadding="@dimen/normal_margin"
+            android:gravity="center_vertical"
+            android:padding="@dimen/activity_margin"
+            android:text="@string/new_group"
+            android:textSize="@dimen/bigger_text_size"
+            app:drawableStartCompat="@drawable/ic_plus_vector"
+            xmlns:app="http://schemas.android.com/apk/res-auto" />
+
+    </LinearLayout>
+</ScrollView>

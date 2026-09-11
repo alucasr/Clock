@@ -22,7 +22,7 @@ numberpicker = "2.4.13"
 #Room
 room = "2.8.4"
 #Fossify
-commons = "6.1.6"
+commons = "5be48d0421f23e54500039dccf55bec6c992fd46"
 #Gradle
 gradlePlugins-agp = "9.3.2"
 #build
@@ -56,7 +56,7 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 #Compose
 compose-detekt = { module = "io.nlopez.compose.rules:detekt", version.ref = "detektCompose" }
 #Fossify
-fossify-commons = { module = "org.fossify:commons", version.ref = "commons" }
+fossify-commons = { module = "com.github.alucasr:commons", version.ref = "commons" }
 [bundles]
 room = [
     "androidx-room-ktx",

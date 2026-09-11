@@ -23,6 +23,7 @@ import org.fossify.clock.helpers.getCurrentDayMinutes
 import org.fossify.clock.helpers.updateNonRecurringAlarmDay
 import org.fossify.clock.models.Alarm
 import org.fossify.commons.dialogs.ConfirmationDialog
+import org.fossify.commons.dialogs.RadioGroupDialog
 import org.fossify.commons.dialogs.SelectAlarmSoundDialog
 import org.fossify.commons.extensions.addBit
 import org.fossify.commons.extensions.applyColorFilter
@@ -38,6 +39,7 @@ import org.fossify.commons.extensions.setupDialogStuff
 import org.fossify.commons.extensions.toast
 import org.fossify.commons.extensions.value
 import org.fossify.commons.models.AlarmSound
+import org.fossify.commons.models.RadioItem
 
 class EditAlarmDialog(
     val activity: SimpleActivity,
@@ -121,8 +123,9 @@ class EditAlarmDialog(
             editAlarm.setText(alarm.label)
 
             val dayLetters =
-                activity.resources.getStringArray(org.fossify.commons.R.array.week_day_letters)
-                    .toList() as ArrayList<String>
+                ArrayList(
+                    activity.resources.getStringArray(org.fossify.commons.R.array.week_day_letters).toList()
+                )
             val dayIndexes = activity.rotateWeekdays(arrayListOf(0, 1, 2, 3, 4, 5, 6))
 
             dayIndexes.forEach {
@@ -156,12 +159,17 @@ class EditAlarmDialog(
             }
         }
 
+        setupGroupSection()
+
         activity.getAlertDialogBuilder()
             .setOnDismissListener { onDismiss() }
             .setPositiveButton(org.fossify.commons.R.string.ok, null)
             .setNegativeButton(org.fossify.commons.R.string.cancel, null)
             .apply {
                 activity.setupDialogStuff(binding.root, this) { alertDialog ->
+                    alertDialog.window?.setSoftInputMode(
+                        android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+                    )
                     alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                         if (!activity.config.wasAlarmWarningShown) {
                             ConfirmationDialog(
@@ -267,5 +275,49 @@ class EditAlarmDialog(
         alarm.soundTitle = alarmSound.title
         alarm.soundUri = alarmSound.uri
         binding.editAlarmSound.text = alarmSound.title
+    }
+
+    private fun setupGroupSection() {
+        binding.editAlarmGroupImage.applyColorFilter(textColor)
+        updateGroupLabel()
+
+        binding.editAlarmGroupHolder.setOnClickListener {
+            val groups = activity.dbHelper.getGroups().sortedBy { it.title.lowercase() }
+            val items = ArrayList<RadioItem>()
+            items.add(RadioItem(0, activity.getString(R.string.no_group)))
+            groups.forEach { group ->
+                items.add(RadioItem(group.id, group.title))
+            }
+
+            RadioGroupDialog(
+                activity = activity,
+                items = items,
+                checkedItemId = alarm.groupId ?: 0,
+            ) { newValue ->
+                val selectedId = newValue as Int
+                alarm.groupId = if (selectedId == 0) null else selectedId
+                updateGroupLabel()
+            }
+        }
+
+        binding.editAlarmManageGroups.applyColorFilter(textColor)
+        binding.editAlarmManageGroups.setOnClickListener {
+            ManageGroupsDialog(activity) {
+                // groups may have been created/renamed/deleted while the dialog was open
+                if (alarm.groupId != null && activity.dbHelper.getGroupWithId(alarm.groupId!!) == null) {
+                    alarm.groupId = null
+                }
+                updateGroupLabel()
+            }
+        }
+    }
+
+    private fun updateGroupLabel() {
+        val groupId = alarm.groupId
+        binding.editAlarmGroup.text = if (groupId == null) {
+            activity.getString(R.string.no_group)
+        } else {
+            activity.dbHelper.getGroupWithId(groupId)?.title ?: activity.getString(R.string.no_group)
+        }
     }
 }

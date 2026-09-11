@@ -37,6 +37,21 @@
     <string name="replaced_by_another_alarm">Replaced by another alarm</string>
     <string name="alarm_timed_out">Alarm timed out</string>
 
+    <!-- Alarm Groups -->
+    <string name="group">Group</string>
+    <string name="no_group">No group</string>
+    <string name="manage_groups">Manage groups</string>
+    <string name="all_groups">All</string>
+    <string name="new_group">New group</string>
+    <string name="rename_group">Rename group</string>
+    <string name="group_name">Group name</string>
+    <string name="no_groups_found">No groups found</string>
+    <string name="delete_group_confirmation">This group contains %d alarm(s). What do you want to do with them?</string>
+    <string name="delete_group_and_alarms">Delete group and its alarms</string>
+    <string name="delete_group_keep_alarms">Delete group, keep alarms ungrouped</string>
+    <string name="group_name_empty">Please enter a group name</string>
+    <string name="group_already_exists">A group with this name already exists</string>
+
     <!-- Timer -->
     <string name="timers_notification_msg">Timers are running</string>
     <string name="timer_single_notification_label_msg">Timer for %s is running</string>

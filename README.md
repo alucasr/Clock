@@ -1,7 +1,20 @@
 # Fossify Clock
 <img alt="Logo" src="graphics/icon.webp" width="120" />
 
+> **⚠️ Este es un fork personal** de [FossifyOrg/Clock](https://github.com/FossifyOrg/Clock), mantenido por [@alucasr](https://github.com/alucasr) con funcionalidades añadidas a medida (grupos de alarmas y ajustes de uso propio). No es una app oficial de Fossify ni está publicada en tiendas de aplicaciones.
+>
+> 📋 Ver [CHANGELOG.md](CHANGELOG.md) para el historial de versiones y qué cambia en cada una.
+
 <a href='https://play.google.com/store/apps/details?id=org.fossify.clock'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' height=80/></a> <a href="https://f-droid.org/packages/org.fossify.clock/"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on-en.svg" alt="Get it on F-Droid" height=80/></a> <a href="https://apt.izzysoft.de/fdroid/index/apk/org.fossify.clock"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="Get it on IzzyOnDroid" height=80/></a>
+
+## 🆕 Funcionalidades añadidas en este fork
+
+- **Grupos de alarmas**: organiza tus alarmas en grupos con nombre propio, actívalos/desactívalos enteros con un switch.
+- **Filtro por grupo**: chips en la pantalla de alarmas para ver solo las de un grupo, u "Todas" con el grupo como prefijo en cada etiqueta.
+- Ver el [CHANGELOG.md](CHANGELOG.md) completo para el detalle de cada versión.
+
+---
+
 
 Introducing Fossify Clock – the ultimate timekeeping companion designed to enhance your daily routines and promote better sleep habits. With a multitude of functions tailored to your needs, Fossify Clock seamlessly integrates into your life, offering unparalleled convenience and versatility.
 

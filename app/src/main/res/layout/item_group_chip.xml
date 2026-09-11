@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.fossify.commons.views.MyTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/group_chip_text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/small_margin"
+    android:background="@drawable/item_group_chip_background"
+    android:clickable="true"
+    android:ellipsize="end"
+    android:focusable="true"
+    android:maxLines="1"
+    android:paddingHorizontal="@dimen/normal_margin"
+    android:paddingVertical="@dimen/tiny_margin"
+    android:textSize="@dimen/smaller_text_size"
+    tools:text="Trabajo"
+    xmlns:tools="http://schemas.android.com/tools" />

@@ -5,12 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import org.fossify.clock.R
 import org.fossify.clock.activities.MainActivity
 import org.fossify.clock.activities.SimpleActivity
 import org.fossify.clock.adapters.AlarmsAdapter
 import org.fossify.clock.databinding.FragmentAlarmBinding
+import org.fossify.clock.databinding.ItemGroupChipBinding
 import org.fossify.clock.dialogs.ChangeAlarmSortDialog
 import org.fossify.clock.dialogs.EditAlarmDialog
+import org.fossify.clock.dialogs.ManageGroupsDialog
 import org.fossify.clock.extensions.alarmController
 import org.fossify.clock.extensions.cancelAlarmClock
 import org.fossify.clock.extensions.config
@@ -28,6 +31,7 @@ import org.fossify.clock.models.Alarm
 import org.fossify.clock.models.AlarmEvent
 import org.fossify.commons.extensions.beVisibleIf
 import org.fossify.commons.extensions.getProperBackgroundColor
+import org.fossify.commons.extensions.getProperPrimaryColor
 import org.fossify.commons.extensions.getProperTextColor
 import org.fossify.commons.extensions.toast
 import org.fossify.commons.extensions.updateTextColors
@@ -42,6 +46,9 @@ import org.greenrobot.eventbus.ThreadMode
 class AlarmFragment : Fragment(), ToggleAlarmInterface {
     private var alarms = ArrayList<Alarm>()
     private var currentEditAlarmDialog: EditAlarmDialog? = null
+
+    // null = "All groups" filter selected (default)
+    private var selectedGroupFilterId: Int? = null
 
     private lateinit var binding: FragmentAlarmBinding
 
@@ -82,6 +89,7 @@ class AlarmFragment : Fragment(), ToggleAlarmInterface {
                 val newAlarm = root.context.createNewAlarm(DEFAULT_ALARM_MINUTES, 0)
                 newAlarm.isEnabled = true
                 newAlarm.days = getTomorrowBit()
+                newAlarm.groupId = selectedGroupFilterId
                 openEditAlarm(newAlarm)
             }
         }
@@ -138,8 +146,17 @@ class AlarmFragment : Fragment(), ToggleAlarmInterface {
     }
 
     private fun setupAlarms() {
+        setupGroupFilters()
+        val safeContext = context ?: return
+        val groupTitles = safeContext.dbHelper.getGroups().associate { it.id to it.title }
+        val showGroupPrefix = selectedGroupFilterId == null
         getSortedAlarms { sortedAlarms ->
-            alarms = sortedAlarms
+            val filteredAlarms = if (selectedGroupFilterId == null) {
+                sortedAlarms
+            } else {
+                ArrayList(sortedAlarms.filter { it.groupId == selectedGroupFilterId })
+            }
+            alarms = filteredAlarms
             val safeActivity = activity as? SimpleActivity ?: return@getSortedAlarms
             var currAdapter = binding.alarmsList.adapter as? AlarmsAdapter
             if (currAdapter == null) {
@@ -147,7 +164,9 @@ class AlarmFragment : Fragment(), ToggleAlarmInterface {
                     activity = safeActivity,
                     alarms = alarms,
                     toggleAlarmInterface = this,
-                    recyclerView = binding.alarmsList
+                    recyclerView = binding.alarmsList,
+                    groupTitles = groupTitles,
+                    showGroupPrefix = showGroupPrefix,
                 ) {
                     openEditAlarm(it as Alarm)
                 }.apply {
@@ -158,11 +177,76 @@ class AlarmFragment : Fragment(), ToggleAlarmInterface {
                     updatePrimaryColor()
                     updateBackgroundColor(safeActivity.getProperBackgroundColor())
                     updateTextColor(safeActivity.getProperTextColor())
-                    updateItems(alarms)
+                    updateItems(alarms, groupTitles, showGroupPrefix)
                 }
             }
             binding.alarmsPlaceholder.beVisibleIf(alarms.isEmpty())
         }
+    }
+
+    /**
+     * Builds the horizontal "All / <group> / ... / Manage" filter row shown above the
+     * alarms list. Tapping a group filters the list to that group's alarms; tapping
+     * "Manage" opens group CRUD. Groups are shown alphabetically, as requested.
+     */
+    private fun setupGroupFilters() {
+        val safeContext = context ?: return
+        val safeActivity = activity as? SimpleActivity ?: return
+        val groups = safeContext.dbHelper.getGroups().sortedBy { it.title.lowercase() }
+
+        binding.alarmGroupsFilterScroll.beVisibleIf(groups.isNotEmpty())
+        if (groups.isEmpty()) {
+            selectedGroupFilterId = null
+            return
+        }
+
+        // if the previously selected group filter got deleted, fall back to "All"
+        if (selectedGroupFilterId != null && groups.none { it.id == selectedGroupFilterId }) {
+            selectedGroupFilterId = null
+        }
+
+        binding.alarmGroupsFilterHolder.removeAllViews()
+
+        val primaryColor = safeContext.getProperPrimaryColor()
+        val textColor = safeContext.getProperTextColor()
+
+        fun addChip(id: Int?, title: String) {
+            val chipBinding = ItemGroupChipBinding.inflate(layoutInflater, binding.alarmGroupsFilterHolder, false)
+            chipBinding.groupChipText.apply {
+                text = title
+                background = background.mutate()
+                val isSelected = selectedGroupFilterId == id
+                setTextColor(if (isSelected) safeContext.getProperBackgroundColor() else textColor)
+                (background as? android.graphics.drawable.GradientDrawable)?.apply {
+                    setColor(if (isSelected) primaryColor else android.graphics.Color.TRANSPARENT)
+                    setStroke(2, textColor)
+                }
+                setOnClickListener {
+                    selectedGroupFilterId = id
+                    setupAlarms()
+                }
+            }
+            binding.alarmGroupsFilterHolder.addView(chipBinding.root)
+        }
+
+        addChip(null, getString(R.string.all_groups))
+        groups.forEach { group ->
+            addChip(group.id, group.title)
+        }
+
+        val manageBinding = ItemGroupChipBinding.inflate(layoutInflater, binding.alarmGroupsFilterHolder, false)
+        manageBinding.groupChipText.apply {
+            text = getString(R.string.manage_groups)
+            background = background.mutate()
+            setTextColor(textColor)
+            (background as? android.graphics.drawable.GradientDrawable)?.setStroke(2, textColor)
+            setOnClickListener {
+                ManageGroupsDialog(safeActivity) {
+                    setupAlarms()
+                }
+            }
+        }
+        binding.alarmGroupsFilterHolder.addView(manageBinding.root)
     }
 
     private fun openEditAlarm(alarm: Alarm) {

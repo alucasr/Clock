@@ -126,5 +126,44 @@
 
             </org.fossify.commons.views.MyTextInputLayout>
         </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/edit_alarm_group_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edit_alarm_label_holder"
+            android:background="?attr/selectableItemBackground"
+            android:paddingStart="@dimen/activity_margin"
+            android:paddingTop="@dimen/medium_margin"
+            android:paddingEnd="@dimen/activity_margin"
+            android:paddingBottom="@dimen/medium_margin">
+
+            <ImageView
+                android:id="@+id/edit_alarm_group_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_folder_vector" />
+
+            <org.fossify.commons.views.MyTextView
+                android:id="@+id/edit_alarm_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/medium_margin"
+                android:layout_toStartOf="@+id/edit_alarm_manage_groups"
+                android:layout_toEndOf="@+id/edit_alarm_group_image"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textSize="@dimen/bigger_text_size"
+                tools:text="@string/no_group" />
+
+            <ImageView
+                android:id="@+id/edit_alarm_manage_groups"
+                android:layout_width="@dimen/drag_handle_size"
+                android:layout_height="@dimen/drag_handle_size"
+                android:layout_alignParentEnd="true"
+                android:padding="@dimen/tiny_margin"
+                android:src="@drawable/ic_settings_cog_vector" />
+
+        </RelativeLayout>
     </RelativeLayout>
 </ScrollView>
