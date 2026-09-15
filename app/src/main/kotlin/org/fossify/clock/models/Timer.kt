@@ -18,6 +18,7 @@ data class Timer(
     var createdAt: Long,
     var channelId: String? = null,
     var oneShot: Boolean = false,
+    var lastUsedAt: Long = 0L,
 )
 
 @Keep

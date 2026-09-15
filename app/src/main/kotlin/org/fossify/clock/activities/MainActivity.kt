@@ -390,10 +390,17 @@ class MainActivity : SimpleActivity() {
             )
         }
 
+        faqItems.add(
+            FAQItem(
+                title = R.string.faq_changelog_title,
+                text = R.string.faq_changelog_text
+            )
+        )
+
         startAboutActivity(
             appNameId = R.string.app_name,
             licenseMask = licenses,
-            versionName = BuildConfig.VERSION_NAME,
+            versionName = "${BuildConfig.VERSION_NAME} (personal, basado en Fossify Clock)",
             faqItems = faqItems,
             showFAQBeforeMail = true
         )

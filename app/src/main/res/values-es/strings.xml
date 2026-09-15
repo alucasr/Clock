@@ -60,6 +60,8 @@
     <string name="no_group">Sin grupo</string>
     <string name="manage_groups">Gestionar grupos</string>
     <string name="all_groups">Todas</string>
+    <string name="faq_changelog_title">Historial de versiones (fork personal)</string>
+    <string name="faq_changelog_text">Este Fossify Clock es un fork personal, basado en el proyecto open source original de Fossify (github.com/FossifyOrg/Clock).\n\nv1.0.1 (actual): correctivos - boton \'Confirmar\' en vez de \'De acuerdo\', el teclado ya no tapa los botones al editar una alarma, orden por hora en la lista, sonido corregido en alarmas y temporizadores, prefijo de grupo entre parentesis en la vista \'Todas\', nueva alarma creada desde un grupo hereda ese grupo.\n\nv1.0.0: primera version con grupos de alarmas - crear/renombrar/borrar grupos (con opcion de que hacer con sus alarmas al borrar el grupo), activar/desactivar un grupo entero, filtro por grupo en la lista de alarmas, selector de grupo al editar una alarma.\n\nCodigo fuente completo: github.com/alucasr/Clock</string>
     <string name="new_group">Nuevo grupo</string>
     <string name="rename_group">Renombrar grupo</string>
     <string name="group_name">Nombre del grupo</string>

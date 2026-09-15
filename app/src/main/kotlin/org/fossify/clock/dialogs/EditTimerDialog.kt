@@ -8,9 +8,11 @@ import org.fossify.clock.databinding.DialogEditTimerBinding
 import org.fossify.clock.extensions.*
 import org.fossify.clock.helpers.PICK_AUDIO_FILE_INTENT_ID
 import org.fossify.clock.models.Timer
+import org.fossify.clock.models.TimerEvent
 import org.fossify.commons.dialogs.SelectAlarmSoundDialog
 import org.fossify.commons.extensions.*
 import org.fossify.commons.models.AlarmSound
+import org.greenrobot.eventbus.EventBus
 
 class EditTimerDialog(val activity: SimpleActivity, val timer: Timer, val callback: (id: Long) -> Unit) {
     private val binding = DialogEditTimerBinding.inflate(activity.layoutInflater)
@@ -67,9 +69,15 @@ class EditTimerDialog(val activity: SimpleActivity, val timer: Timer, val callba
             .apply {
                 activity.setupDialogStuff(binding.root, this) { alertDialog ->
                     alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                        val isNewTimer = timer.id == null
                         timer.label = binding.editTimer.value
                         activity.timerHelper.insertOrUpdateTimer(timer) {
                             activity.config.timerLastConfig = timer
+                            if (isNewTimer) {
+                                EventBus.getDefault().post(
+                                    TimerEvent.Start(it.toInt(), timer.seconds.secondsToMillis)
+                                )
+                            }
                             callback(it)
                             alertDialog.dismiss()
                         }
@@ -81,7 +89,7 @@ class EditTimerDialog(val activity: SimpleActivity, val timer: Timer, val callba
     private fun restoreLastAlarm() {
         if (timer.id == null) {
             activity.config.timerLastConfig?.let { lastConfig ->
-                timer.label = lastConfig.label
+                // label intentionally NOT restored -- a blank field makes it clear this is a new timer
                 timer.seconds = lastConfig.seconds
                 timer.soundTitle = lastConfig.soundTitle
                 timer.soundUri = lastConfig.soundUri

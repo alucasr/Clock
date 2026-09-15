@@ -115,7 +115,7 @@ class TimerFragment : Fragment() {
             val safeContext = context ?: return@getTimers
             val sortedTimers = when (safeContext.config.timerSort) {
                 SORT_BY_TIMER_DURATION -> timers.sortedBy { it.seconds }
-                SORT_BY_DATE_CREATED -> timers.sortedBy { it.id }
+                SORT_BY_DATE_CREATED -> timers.sortedByDescending { it.lastUsedAt }
                 SORT_BY_CUSTOM -> {
                     val customTimersSortOrderString = activity?.config?.timersCustomSorting
                     if (customTimersSortOrderString == "") {

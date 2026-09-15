@@ -2,6 +2,10 @@
 
 Este proyecto es un fork personal de [Fossify Clock](https://github.com/FossifyOrg/Clock) con funcionalidades añadidas a medida.
 
+## [1.0.2] - 2026-09-11
+
+- Nuevo: pantalla "Acerca de" indica que es un fork personal derivado de Fossify Clock, con enlace al repositorio e historial de versiones visible ahí mismo (para comparar qué versión tiene cada dispositivo).
+
 ## [1.0.1] - 2026-09-11
 
 Correctivos y ajustes menores sobre la v1.0.0, pulidos durante el uso diario real:

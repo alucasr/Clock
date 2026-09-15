@@ -159,6 +159,7 @@ fun Context.createNewAlarm(timeInMinutes: Int, weekDays: Int): Alarm {
 }
 
 fun Context.createNewTimer(): Timer {
+    val now = System.currentTimeMillis()
     return Timer(
         id = null,
         seconds = config.timerSeconds,
@@ -167,8 +168,9 @@ fun Context.createNewTimer(): Timer {
         soundUri = config.timerSoundUri,
         soundTitle = config.timerSoundTitle,
         label = config.timerLabel ?: "",
-        createdAt = System.currentTimeMillis(),
+        createdAt = now,
         channelId = config.timerChannelId,
+        lastUsedAt = now,
     )
 }
 

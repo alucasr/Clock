@@ -91,6 +91,10 @@ class App : FossifyApp(), LifecycleObserver {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: TimerEvent.Start) {
+        timerHelper.getTimer(event.timerId) { timer ->
+            timerHelper.insertOrUpdateTimer(timer.copy(lastUsedAt = System.currentTimeMillis()))
+        }
+
         val countDownTimer = object : CountDownTimer(event.duration, 1000) {
             override fun onTick(tick: Long) {
                 updateTimerState(event.timerId, TimerState.Running(event.duration, tick))

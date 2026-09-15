@@ -218,7 +218,7 @@ class EditAlarmDialog(
     private fun restoreLastAlarm() {
         if (alarm.id == 0) {
             activity.config.alarmLastConfig?.let { lastConfig ->
-                alarm.label = lastConfig.label
+                // label intentionally NOT restored -- a blank field makes it clear this is a new alarm
                 alarm.days = lastConfig.days
                 alarm.soundTitle = lastConfig.soundTitle
                 alarm.soundUri = lastConfig.soundUri
