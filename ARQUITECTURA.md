@@ -123,14 +123,9 @@ Hay un servidor HTTP simple corriendo en el Mac de forma persistente, sirviendo 
 # Arrancar (si no está corriendo ya, comprobar antes con: ps aux | grep http.server)
 cd ~/repos/apk_serve && python3 -m http.server 8765 --bind 0.0.0.0 &
 ```
-- Sirve `~/repos/apk_serve/FossifyClock-debug.apk`
+- `~/repos/apk_serve/FossifyClock-debug.apk` es un **symlink** a `~/repos/Clock/app/build/outputs/apk/foss/debug/clock-4-foss-debug.apk` — Gradle siempre sobreescribe ese nombre de fichero en cada `./gradlew assembleFossDebug`, así que el link queda SIEMPRE actualizado a la última build compilada, sin pasos manuales. `python -m http.server` sigue symlinks correctamente (verificado).
 - URL de descarga: `http://<IP-del-Mac-en-la-LAN>:8765/FossifyClock-debug.apk` (obtener IP con `ipconfig getifaddr en0`)
-
-**⚠️ Paso que se olvida fácilmente**: este fichero es una COPIA estática — compilar y hacer `adb install` NO lo actualiza automáticamente. Cada vez que se genera una nueva build para instalar/compartir, copiar explícitamente:
-```bash
-cp app/build/outputs/apk/foss/debug/clock-4-foss-debug.apk ~/repos/apk_serve/FossifyClock-debug.apk
-```
-Verificar que coincide con lo compilado (no una versión vieja) comparando hash: `md5 <ambos ficheros>`, o revisando el `versionName` (con timestamp de build) tras instalar desde el link.
+- Si algún día se recrea el symlink o se rompe: `ln -sf /Users/alucasr/repos/Clock/app/build/outputs/apk/foss/debug/clock-4-foss-debug.apk /Users/alucasr/repos/apk_serve/FossifyClock-debug.apk`
 
 
 Ver procedimiento operativo completo (backup → instalar → informe) en `~/Documents/Hermes/procedimientos/instalacion_apps_moviles.md`. Este documento (`ARQUITECTURA.md`) es sobre el código; ese otro es sobre el proceso de despliegue al dispositivo físico.
