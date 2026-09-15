@@ -3,6 +3,7 @@ package org.fossify.clock.activities
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -92,6 +93,13 @@ class AlarmActivity : SimpleActivity() {
         binding.reminderSnooze.applyColorFilter(textColor)
         binding.reminderChevronsLeft.applyColorFilter(textColor)
         binding.reminderChevronsRight.applyColorFilter(textColor)
+
+        binding.reminderDraggable.background = GradientDrawable().apply {
+            shape = GradientDrawable.OVAL
+            setColor(getProperPrimaryColor())
+            alpha = 60
+            setStroke(4, textColor)
+        }
 
         var minDragX = 0f
         var maxDragX = 0f
