@@ -2,6 +2,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.konan.properties.Properties
 import java.io.FileInputStream
+import java.text.SimpleDateFormat
+import java.util.Date
 
 plugins {
     alias(libs.plugins.android)
@@ -23,6 +25,10 @@ fun hasSigningVars(): Boolean {
             && providers.environmentVariable("SIGNING_STORE_PASSWORD").orNull != null
 }
 
+fun buildTimestamp(): String {
+    return SimpleDateFormat("yyyyMMdd_HHmm").format(Date())
+}
+
 base {
     val versionCode = project.property("VERSION_CODE").toString().toInt()
     archivesName = "clock-$versionCode"
@@ -35,7 +41,7 @@ android {
         applicationId = project.property("APP_ID").toString()
         minSdk = project.libs.versions.app.build.minimumSDK.get().toInt()
         targetSdk = project.libs.versions.app.build.targetSDK.get().toInt()
-        versionName = project.property("VERSION_NAME").toString()
+        versionName = "${project.property("VERSION_NAME")} b${buildTimestamp()}"
         versionCode = project.property("VERSION_CODE").toString().toInt()
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas")

@@ -69,15 +69,14 @@ class EditTimerDialog(val activity: SimpleActivity, val timer: Timer, val callba
             .apply {
                 activity.setupDialogStuff(binding.root, this) { alertDialog ->
                     alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                        val isNewTimer = timer.id == null
                         timer.label = binding.editTimer.value
                         activity.timerHelper.insertOrUpdateTimer(timer) {
                             activity.config.timerLastConfig = timer
-                            if (isNewTimer) {
-                                EventBus.getDefault().post(
-                                    TimerEvent.Start(it.toInt(), timer.seconds.secondsToMillis)
-                                )
-                            }
+                            // starting the timer on every confirm (new or edited) also
+                            // bumps lastUsedAt, which moves it to the top of the list
+                            EventBus.getDefault().post(
+                                TimerEvent.Start(it.toInt(), timer.seconds.secondsToMillis)
+                            )
                             callback(it)
                             alertDialog.dismiss()
                         }
