@@ -16,6 +16,7 @@ import org.fossify.clock.extensions.config
 import org.fossify.clock.extensions.createNewTimer
 import org.fossify.clock.extensions.timerHelper
 import org.fossify.clock.helpers.DisabledItemChangeAnimator
+import org.fossify.clock.helpers.SORT_BY_CREATION_ORDER
 import org.fossify.clock.helpers.SORT_BY_TIMER_DURATION
 import org.fossify.clock.models.Timer
 import org.fossify.clock.models.TimerEvent
@@ -25,7 +26,6 @@ import org.fossify.commons.extensions.getProperTextColor
 import org.fossify.commons.extensions.hideKeyboard
 import org.fossify.commons.extensions.updateTextColors
 import org.fossify.commons.helpers.SORT_BY_CUSTOM
-import org.fossify.commons.helpers.SORT_BY_DATE_CREATED
 import org.fossify.commons.models.AlarmSound
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -115,7 +115,7 @@ class TimerFragment : Fragment() {
             val safeContext = context ?: return@getTimers
             val sortedTimers = when (safeContext.config.timerSort) {
                 SORT_BY_TIMER_DURATION -> timers.sortedBy { it.seconds }
-                SORT_BY_DATE_CREATED -> timers.sortedByDescending { it.lastUsedAt }
+                SORT_BY_CREATION_ORDER -> timers.sortedByDescending { it.lastUsedAt }
                 SORT_BY_CUSTOM -> {
                     val customTimersSortOrderString = activity?.config?.timersCustomSorting
                     if (customTimersSortOrderString == "") {
