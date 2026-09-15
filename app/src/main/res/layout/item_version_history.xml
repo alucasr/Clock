@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/normal_margin"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <org.fossify.commons.views.MyTextView
+            android:id="@+id/version_item_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="@dimen/normal_text_size"
+            tools:text="v1.0.3" />
+
+        <org.fossify.commons.views.MyTextView
+            android:id="@+id/version_item_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/small_margin"
+            android:alpha="0.6"
+            android:gravity="end"
+            android:textSize="@dimen/smaller_text_size"
+            tools:text="15/09/2026" />
+
+    </LinearLayout>
+
+    <org.fossify.commons.views.MyTextView
+        android:id="@+id/version_item_changes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:alpha="0.85"
+        android:lineSpacingExtra="2dp"
+        android:textSize="@dimen/smaller_text_size"
+        tools:text="• Cambio uno\n• Cambio dos" />
+
+</LinearLayout>

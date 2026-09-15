@@ -397,6 +397,10 @@ class MainActivity : SimpleActivity() {
             )
         )
 
+        org.fossify.commons.activities.AboutActivity.onVersionSingleTap = {
+            org.fossify.clock.dialogs.VersionHistoryDialog(this)
+        }
+
         startAboutActivity(
             appNameId = R.string.app_name,
             licenseMask = licenses,
