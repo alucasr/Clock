@@ -17,6 +17,7 @@ object AppVersionHistory {
                 "Crear o editar un temporizador lo pone en marcha y lo sube al principio de la lista (orden por último uso)",
                 "Botón de deslizar más claro en la pantalla de alarma sonando: fondo circular con borde y flechas dobles a cada lado",
                 "Cada build incluye fecha y hora para identificar exactamente qué versión está instalada",
+                "Nuevo: al tocar la versión en \"Acerca de\" se abre este historial de versiones",
             )
         ),
         VersionHistoryEntry(

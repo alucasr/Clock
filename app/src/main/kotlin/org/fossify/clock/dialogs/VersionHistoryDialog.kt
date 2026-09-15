@@ -1,16 +1,16 @@
 package org.fossify.clock.dialogs
 
+import android.app.Activity
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import org.fossify.clock.BuildConfig
-import org.fossify.clock.activities.SimpleActivity
 import org.fossify.clock.databinding.DialogVersionHistoryBinding
 import org.fossify.clock.databinding.ItemVersionHistoryBinding
 import org.fossify.clock.models.AppVersionHistory
 import org.fossify.commons.extensions.getAlertDialogBuilder
 import org.fossify.commons.extensions.setupDialogStuff
 
-class VersionHistoryDialog(private val activity: SimpleActivity) {
+class VersionHistoryDialog(private val activity: Activity) {
     init {
         val binding = DialogVersionHistoryBinding.inflate(LayoutInflater.from(activity))
 

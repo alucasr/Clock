@@ -108,7 +108,13 @@ adb -s <serial> shell pm enable org.fossify.clock.debug
 
 ## Cambiar pantallas de `commons` sin duplicar toda la librería
 
-Cuando se necesita interceptar/personalizar un comportamiento de una pantalla compartida (ej. AboutActivity, que usa Jetpack Compose y no expone callbacks para todo), el patrón usado es: añadir un **hook opcional estático** (`companion object { var onXxx: (() -> Unit)? = null }`) en la clase de `commons`, que la app anfitriona (`Clock`) puede registrar justo antes de lanzar la Activity/Fragment. Se limpia solo tras usarse una vez, para no dejar referencias colgadas entre instancias.
+Cuando se necesita interceptar/personalizar un comportamiento de una pantalla compartida (ej. AboutActivity, que usa Jetpack Compose y no expone callbacks para todo), el patrón usado es: añadir un **hook opcional estático** (`companion object { var onXxx: ((Activity) -> Unit)? = null }`) en la clase de `commons`, que la app anfitriona (`Clock`) puede registrar justo antes de lanzar la Activity/Fragment. Se limpia solo tras usarse una vez, para no dejar referencias colgadas entre instancias.
+
+**Caso real implementado (15-sep-2026): popup de historial de versiones al tocar la versión en "Acerca de"**
+- `commons/AboutActivity.kt`: `companion object { var onVersionSingleTap: ((Activity) -> Unit)? = null }`. En `onVersionClick()`, si el hook está registrado se invoca con `this` (la Activity actual) y se limpia; si no, cae al comportamiento original (easter egg de 7 clicks).
+- **Trampa importante**: el lambda registrado debe recibir la Activity como PARÁMETRO del callback, no capturar `this` del sitio donde se registra. Si el hook se registra en `MainActivity.launchAbout()` usando `VersionHistoryDialog(this)` (capturando el `this` de MainActivity), el diálogo se adjunta a la ventana de MainActivity — que en ese momento está DETRÁS de AboutActivity (la pantalla realmente visible). Resultado: el diálogo técnicamente se muestra, pero queda oculto tras AboutActivity, y solo se hace visible cuando el usuario vuelve atrás y MainActivity pasa a primer plano. Fix: `onVersionSingleTap = { foregroundActivity -> VersionHistoryDialog(foregroundActivity) }`, usando el parámetro que pasa el propio hook (la Activity real en pantalla en ese momento), nunca `this`.
+- **Trampa de layout**: un diálogo con contenido dinámico (`ScrollView` + `LinearLayout` inflado en runtime) dentro de un `ConstraintLayout` root con alturas `0dp`/`wrap_content` combinadas puede colapsar a altura 0 en el contexto de un `AlertDialog`. Usar un `LinearLayout` root vertical simple con el `ScrollView` en `layout_height="wrap_content"` + `maxHeight` fijo es más robusto que ConstraintLayout para este tipo de diálogo.
+- Ficheros: `models/VersionHistory.kt` (histórico estructurado versión/fecha/lista de cambios), `dialogs/VersionHistoryDialog.kt`, `layout/dialog_version_history.xml` + `item_version_history.xml`.
 
 ## Instalación en el Pixel 7 de pruebas
 

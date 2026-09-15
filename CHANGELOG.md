@@ -5,8 +5,11 @@ Este proyecto es un fork personal de [Fossify Clock](https://github.com/FossifyO
 ## [1.0.3] - 2026-09-15
 
 - Nuevo: al crear una alarma o un temporizador nuevo, el campo de nombre queda vacío por defecto (antes heredaba el texto del último usado, dando la sensación de estar editando uno existente).
-- Nuevo: al crear un temporizador, se pone en marcha automáticamente (para eso se crea).
+- Nuevo: crear O editar un temporizador (al confirmar) lo pone en marcha automáticamente y lo sube al principio de la lista.
 - Nuevo: los temporizadores se ordenan por último uso (el más reciente arriba) en vez de por fecha de creación — el que más usas queda más a mano.
+- Corregido: bug real en el ordenamiento — el código comparaba contra una constante equivocada (`SORT_BY_DATE_CREATED` de la librería compartida en vez de `SORT_BY_CREATION_ORDER`, la que realmente se guarda), por lo que la lista nunca se reordenaba visualmente aunque el dato sí se actualizara en la base de datos.
+- Nuevo: cada build incluye fecha y hora en la versión (ej. `1.0.3 b20260915_1357`) para identificar exactamente qué compilación está instalada en cada dispositivo.
+- Nuevo: al tocar la línea de la versión en "Acerca de" se abre un popup con el icono de la app, presentación, versión actual y el historial completo de versiones con scroll (más reciente arriba) — antes solo había un bloque de texto plano sin interacción.
 
 ## [1.0.2] - 2026-09-11
 

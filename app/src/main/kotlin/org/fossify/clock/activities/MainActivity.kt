@@ -397,8 +397,8 @@ class MainActivity : SimpleActivity() {
             )
         )
 
-        org.fossify.commons.activities.AboutActivity.onVersionSingleTap = {
-            org.fossify.clock.dialogs.VersionHistoryDialog(this)
+        org.fossify.commons.activities.AboutActivity.onVersionSingleTap = { foregroundActivity ->
+            org.fossify.clock.dialogs.VersionHistoryDialog(foregroundActivity)
         }
 
         startAboutActivity(
