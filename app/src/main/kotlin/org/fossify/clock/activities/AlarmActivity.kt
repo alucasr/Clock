@@ -90,6 +90,8 @@ class AlarmActivity : SimpleActivity() {
         binding.reminderDismiss.applyColorFilter(textColor)
         binding.reminderDraggable.applyColorFilter(textColor)
         binding.reminderSnooze.applyColorFilter(textColor)
+        binding.reminderChevronsLeft.applyColorFilter(textColor)
+        binding.reminderChevronsRight.applyColorFilter(textColor)
 
         var minDragX = 0f
         var maxDragX = 0f

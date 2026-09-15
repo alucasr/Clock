@@ -2,6 +2,12 @@
 
 Este proyecto es un fork personal de [Fossify Clock](https://github.com/FossifyOrg/Clock) con funcionalidades añadidas a medida.
 
+## [1.0.3] - 2026-09-15
+
+- Nuevo: al crear una alarma o un temporizador nuevo, el campo de nombre queda vacío por defecto (antes heredaba el texto del último usado, dando la sensación de estar editando uno existente).
+- Nuevo: al crear un temporizador, se pone en marcha automáticamente (para eso se crea).
+- Nuevo: los temporizadores se ordenan por último uso (el más reciente arriba) en vez de por fecha de creación — el que más usas queda más a mano.
+
 ## [1.0.2] - 2026-09-11
 
 - Nuevo: pantalla "Acerca de" indica que es un fork personal derivado de Fossify Clock, con enlace al repositorio e historial de versiones visible ahí mismo (para comparar qué versión tiene cada dispositivo).
