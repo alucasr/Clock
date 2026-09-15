@@ -116,6 +116,21 @@ Cuando se necesita interceptar/personalizar un comportamiento de una pantalla co
 - **Trampa de layout**: un diálogo con contenido dinámico (`ScrollView` + `LinearLayout` inflado en runtime) dentro de un `ConstraintLayout` root con alturas `0dp`/`wrap_content` combinadas puede colapsar a altura 0 en el contexto de un `AlertDialog`. Usar un `LinearLayout` root vertical simple con el `ScrollView` en `layout_height="wrap_content"` + `maxHeight` fijo es más robusto que ConstraintLayout para este tipo de diálogo.
 - Ficheros: `models/VersionHistory.kt` (histórico estructurado versión/fecha/lista de cambios), `dialogs/VersionHistoryDialog.kt`, `layout/dialog_version_history.xml` + `item_version_history.xml`.
 
-## Instalación en el Pixel 7 de pruebas
+## Servidor HTTP local para descargar la APK en otros dispositivos (misma subred)
+
+Hay un servidor HTTP simple corriendo en el Mac de forma persistente, sirviendo la APK para poder descargarla desde el móvil (u otro dispositivo) conectado a la misma red WiFi, sin cable:
+```bash
+# Arrancar (si no está corriendo ya, comprobar antes con: ps aux | grep http.server)
+cd ~/repos/apk_serve && python3 -m http.server 8765 --bind 0.0.0.0 &
+```
+- Sirve `~/repos/apk_serve/FossifyClock-debug.apk`
+- URL de descarga: `http://<IP-del-Mac-en-la-LAN>:8765/FossifyClock-debug.apk` (obtener IP con `ipconfig getifaddr en0`)
+
+**⚠️ Paso que se olvida fácilmente**: este fichero es una COPIA estática — compilar y hacer `adb install` NO lo actualiza automáticamente. Cada vez que se genera una nueva build para instalar/compartir, copiar explícitamente:
+```bash
+cp app/build/outputs/apk/foss/debug/clock-4-foss-debug.apk ~/repos/apk_serve/FossifyClock-debug.apk
+```
+Verificar que coincide con lo compilado (no una versión vieja) comparando hash: `md5 <ambos ficheros>`, o revisando el `versionName` (con timestamp de build) tras instalar desde el link.
+
 
 Ver procedimiento operativo completo (backup → instalar → informe) en `~/Documents/Hermes/procedimientos/instalacion_apps_moviles.md`. Este documento (`ARQUITECTURA.md`) es sobre el código; ese otro es sobre el proceso de despliegue al dispositivo físico.
