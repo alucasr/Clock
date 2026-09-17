@@ -72,4 +72,26 @@
     <string name="delete_group_keep_alarms">Borrar el grupo, dejar las alarmas sin grupo</string>
     <string name="group_name_empty">Introduce un nombre de grupo</string>
     <string name="group_already_exists">Ya existe un grupo con ese nombre</string>
+
+    <!-- Grupos de rutinas (independientes de los grupos de alarmas) -->
+    <string name="manage_routine_groups">Gestionar grupos de rutinas</string>
+    <string name="delete_routine_group_confirmation">Este grupo contiene %d rutina(s). ¿Qué quieres hacer con ellas?</string>
+    <string name="delete_group_and_routines">Borrar el grupo y sus rutinas</string>
+    <string name="delete_group_keep_routines">Borrar el grupo, dejar las rutinas sin grupo</string>
+
+    <!-- Rutinas -->
+    <string name="routines">Rutinas</string>
+    <string name="routine_tab">Pestaña de rutinas</string>
+    <string name="no_routines_found">No hay rutinas</string>
+    <string name="add_routine">Añadir una rutina</string>
+    <string name="new_routine">Rutina nueva</string>
+    <string name="routine_enabled">Activada</string>
+    <string name="routine_reminder_text">Toca para tu rutina</string>
+    <string name="stop_routine">Parar</string>
+    <string name="routine_invalid_time_range">La hora de fin debe ser posterior a la de inicio</string>
+    <string name="minutes_raw">min</string>
+    <string name="routine_style_continuous">Continua</string>
+    <string name="routine_style_discreet">Discreta</string>
+
+    <string name="routine_every_x">Cada %s</string>
 </resources>

@@ -10,7 +10,7 @@ object AppVersionHistory {
     // most recent first
     val entries = listOf(
         VersionHistoryEntry(
-            version = "1.0.3",
+            version = "1.1.3",
             date = "2026-09-15",
             changes = listOf(
                 "Al crear una alarma o temporizador nuevo, el nombre queda vacío por defecto",
@@ -21,14 +21,14 @@ object AppVersionHistory {
             )
         ),
         VersionHistoryEntry(
-            version = "1.0.2",
+            version = "1.1.2",
             date = "2026-09-11",
             changes = listOf(
                 "La pantalla \"Acerca de\" indica que es un fork personal, con enlace al repositorio",
             )
         ),
         VersionHistoryEntry(
-            version = "1.0.1",
+            version = "1.1.1",
             date = "2026-09-11",
             changes = listOf(
                 "Botón \"Confirmar\" en vez de \"De acuerdo\"",
@@ -40,7 +40,7 @@ object AppVersionHistory {
             )
         ),
         VersionHistoryEntry(
-            version = "1.0.0",
+            version = "1.1.0",
             date = "2026-09-08",
             changes = listOf(
                 "Primera versión con grupos de alarmas",
@@ -48,6 +48,13 @@ object AppVersionHistory {
                 "Activar o desactivar un grupo entero",
                 "Filtro por grupo en la lista de alarmas",
                 "Selector de grupo al editar una alarma",
+            )
+        ),
+        VersionHistoryEntry(
+            version = "1.0.0",
+            date = "2026-09-01",
+            changes = listOf(
+                "Versión original del fork (github.com/FossifyOrg/Clock) con los errores de esa versión corregidos, antes de añadir funcionalidades propias",
             )
         ),
     )

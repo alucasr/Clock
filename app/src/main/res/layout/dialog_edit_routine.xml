@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/edit_routine_scrollview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/edit_routine_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/edit_routine_label_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_margin"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/activity_margin"
+            android:paddingEnd="@dimen/activity_margin"
+            android:paddingBottom="@dimen/medium_margin">
+
+            <ImageView
+                android:id="@+id/edit_routine_label_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_label_vector" />
+
+            <org.fossify.commons.views.MyTextInputLayout
+                android:id="@+id/edit_routine_hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/medium_margin"
+                android:layout_marginEnd="@dimen/medium_margin"
+                android:hint="@string/label">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_routine"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textSize="@dimen/normal_text_size" />
+
+            </org.fossify.commons.views.MyTextInputLayout>
+        </LinearLayout>
+
+        <org.fossify.commons.views.MyTextView
+            android:id="@+id/edit_routine_interval"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edit_routine_label_holder"
+            android:background="?attr/selectableItemBackground"
+            android:drawableLeft="@drawable/ic_hourglass_small"
+            android:drawablePadding="@dimen/normal_margin"
+            android:gravity="center_vertical"
+            android:padding="@dimen/activity_margin"
+            android:textSize="@dimen/bigger_text_size"
+            tools:text="Cada 20 minutos" />
+
+        <RelativeLayout
+            android:id="@+id/edit_routine_time_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edit_routine_interval"
+            android:paddingStart="@dimen/activity_margin"
+            android:paddingEnd="@dimen/activity_margin"
+            android:paddingBottom="@dimen/medium_margin">
+
+            <org.fossify.commons.views.MyTextView
+                android:id="@+id/edit_routine_start_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:background="?attr/selectableItemBackground"
+                android:padding="@dimen/medium_margin"
+                android:textSize="@dimen/bigger_text_size"
+                tools:text="09:00" />
+
+            <org.fossify.commons.views.MyTextView
+                android:id="@+id/edit_routine_time_separator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:text="-"
+                android:textSize="@dimen/bigger_text_size" />
+
+            <org.fossify.commons.views.MyTextView
+                android:id="@+id/edit_routine_end_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:background="?attr/selectableItemBackground"
+                android:padding="@dimen/medium_margin"
+                android:textSize="@dimen/bigger_text_size"
+                tools:text="18:00" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/edit_routine_days_holder"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/alarm_day_size"
+            android:layout_below="@+id/edit_routine_time_holder"
+            android:layout_marginStart="@dimen/activity_margin"
+            android:layout_marginTop="@dimen/medium_margin"
+            android:layout_marginBottom="@dimen/medium_margin"
+            android:orientation="horizontal" />
+
+        <RelativeLayout
+            android:id="@+id/edit_routine_vibrate_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edit_routine_days_holder"
+            android:background="?attr/selectableItemBackground"
+            android:paddingStart="@dimen/activity_margin"
+            android:paddingTop="@dimen/medium_margin"
+            android:paddingEnd="@dimen/activity_margin"
+            android:paddingBottom="@dimen/medium_margin"
+            android:textSize="@dimen/bigger_text_size">
+
+            <ImageView
+                android:id="@+id/edit_routine_vibrate_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/edit_routine_vibrate"
+                android:layout_alignBottom="@+id/edit_routine_vibrate"
+                android:src="@drawable/ic_vibrate_vector" />
+
+            <org.fossify.commons.views.MyAppCompatCheckbox
+                android:id="@+id/edit_routine_vibrate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_toEndOf="@+id/edit_routine_vibrate_icon"
+                android:background="@null"
+                android:clickable="false"
+                android:layoutDirection="rtl"
+                android:padding="@dimen/medium_margin"
+                android:text="@string/vibrate" />
+
+        </RelativeLayout>
+
+        <org.fossify.commons.views.MyTextView
+            android:id="@+id/edit_routine_sound"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edit_routine_vibrate_holder"
+            android:background="?attr/selectableItemBackground"
+            android:drawableLeft="@drawable/ic_bell_vector"
+            android:drawablePadding="@dimen/normal_margin"
+            android:gravity="center_vertical"
+            android:padding="@dimen/activity_margin"
+            android:textSize="@dimen/bigger_text_size"
+            tools:text="Default alarm" />
+
+        <RelativeLayout
+            android:id="@+id/edit_routine_group_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edit_routine_sound"
+            android:background="?attr/selectableItemBackground"
+            android:paddingStart="@dimen/activity_margin"
+            android:paddingTop="@dimen/medium_margin"
+            android:paddingEnd="@dimen/activity_margin"
+            android:paddingBottom="@dimen/medium_margin">
+
+            <ImageView
+                android:id="@+id/edit_routine_group_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_folder_vector" />
+
+            <org.fossify.commons.views.MyTextView
+                android:id="@+id/edit_routine_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/medium_margin"
+                android:layout_toStartOf="@+id/edit_routine_manage_groups"
+                android:layout_toEndOf="@+id/edit_routine_group_image"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textSize="@dimen/bigger_text_size"
+                tools:text="@string/no_group" />
+
+            <ImageView
+                android:id="@+id/edit_routine_manage_groups"
+                android:layout_width="@dimen/drag_handle_size"
+                android:layout_height="@dimen/drag_handle_size"
+                android:layout_alignParentEnd="true"
+                android:padding="@dimen/tiny_margin"
+                android:src="@drawable/ic_folder_vector" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/edit_routine_enabled_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edit_routine_group_holder"
+            android:paddingStart="@dimen/activity_margin"
+            android:paddingTop="@dimen/medium_margin"
+            android:paddingEnd="@dimen/activity_margin"
+            android:paddingBottom="@dimen/medium_margin">
+
+            <org.fossify.commons.views.MyTextView
+                android:id="@+id/edit_routine_enabled_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/routine_enabled"
+                android:textSize="@dimen/bigger_text_size" />
+
+            <org.fossify.clock.views.RoutineNotificationStyleView
+                android:id="@+id/edit_routine_notification_style"
+                android:layout_width="56dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/edit_routine_enabled_switch"
+                android:layout_marginEnd="@dimen/normal_margin"
+                android:padding="@dimen/tiny_margin" />
+
+            <org.fossify.commons.views.MyMaterialSwitch
+                android:id="@+id/edit_routine_enabled_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</ScrollView>

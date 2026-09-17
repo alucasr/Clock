@@ -42,9 +42,11 @@ const val DATA_EXPORT_EXTENSION = ".json"
 const val LAST_DATA_EXPORT_PATH = "last_alarms_export_path"
 const val MIGRATE_FIRST_DAY_OF_WEEK = "migrate_first_day_of_week"
 
-const val TABS_COUNT = 4
+const val TABS_COUNT = 5
 const val EDITED_TIME_ZONE_SEPARATOR = ":"
 const val ALARM_ID = "alarm_id"
+const val ROUTINE_ID = "routine_id"
+const val INVALID_ROUTINE_ID = -1
 const val NOTIFICATION_ID = "notification_id"
 const val DEFAULT_ALARM_MINUTES = 480
 const val DEFAULT_MAX_ALARM_REMINDER_SECS = 300
@@ -59,6 +61,7 @@ const val OPEN_STOPWATCH_TAB_INTENT_ID = 9993
 const val PICK_AUDIO_FILE_INTENT_ID = 9994
 const val OPEN_ALARMS_TAB_INTENT_ID = 9996
 const val OPEN_APP_INTENT_ID = 9997
+const val OPEN_ROUTINE_TAB_INTENT_ID = 9995
 const val ALARM_NOTIFICATION_ID = 9998
 const val TIMER_RUNNING_NOTIFICATION_ID = 10000
 const val STOPWATCH_RUNNING_NOTIFICATION_ID = 10001
@@ -70,10 +73,16 @@ const val TAB_CLOCK = 1
 const val TAB_ALARM = 2
 const val TAB_STOPWATCH = 4
 const val TAB_TIMER = 8
+const val TAB_ROUTINE = 16
 const val TAB_CLOCK_INDEX = 0
 const val TAB_ALARM_INDEX = 1
 const val TAB_STOPWATCH_INDEX = 2
 const val TAB_TIMER_INDEX = 3
+const val TAB_ROUTINE_INDEX = 4
+
+// routine notification styles
+const val ROUTINE_NOTIFICATION_ID_BASE = 20000
+const val ROUTINE_STOP_INTENT_ID_BASE = 30000
 
 const val TIMER_ID = "timer_id"
 const val INVALID_TIMER_ID = -1
@@ -310,4 +319,31 @@ fun updateNonRecurringAlarmDay(alarm: Alarm) {
     } else {
         TOMORROW_BIT
     }
+}
+
+/**
+ * Finds the next Calendar instant (today or a future day) at which [startTimeMinutes] occurs
+ * on one of the days set in [days] (bitmask, same encoding as [Alarm.days] recurring case).
+ * Returns null if no day is set in the bitmask.
+ */
+fun getTimeOfNextRoutineStart(startTimeMinutes: Int, days: Int): Calendar? {
+    if (days <= 0) return null
+
+    val nextTime = Calendar.getInstance().apply {
+        set(Calendar.HOUR_OF_DAY, startTimeMinutes / 60)
+        set(Calendar.MINUTE, startTimeMinutes % 60)
+        set(Calendar.SECOND, 0)
+        set(Calendar.MILLISECOND, 0)
+    }
+
+    val now = Calendar.getInstance()
+    repeat(8) {
+        val currentDay = getDayNumber(nextTime.get(Calendar.DAY_OF_WEEK))
+        if (days.isBitSet(currentDay) && now < nextTime) {
+            return nextTime
+        } else {
+            nextTime.add(Calendar.DAY_OF_MONTH, 1)
+        }
+    }
+    return null
 }

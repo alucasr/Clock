@@ -35,9 +35,14 @@ import org.fossify.clock.helpers.MyAnalogueTimeWidgetProvider
 import org.fossify.clock.helpers.MyDigitalTimeWidgetProvider
 import org.fossify.clock.helpers.NOTIFICATION_ID
 import org.fossify.clock.helpers.OPEN_ALARMS_TAB_INTENT_ID
+import org.fossify.clock.helpers.OPEN_ROUTINE_TAB_INTENT_ID
 import org.fossify.clock.helpers.OPEN_STOPWATCH_TAB_INTENT_ID
 import org.fossify.clock.helpers.OPEN_TAB
+import org.fossify.clock.helpers.ROUTINE_ID
+import org.fossify.clock.helpers.ROUTINE_NOTIFICATION_ID_BASE
+import org.fossify.clock.helpers.ROUTINE_STOP_INTENT_ID_BASE
 import org.fossify.clock.helpers.TAB_ALARM
+import org.fossify.clock.helpers.TAB_ROUTINE
 import org.fossify.clock.helpers.TAB_STOPWATCH
 import org.fossify.clock.helpers.TAB_TIMER
 import org.fossify.clock.helpers.TIMER_ID
@@ -99,6 +104,21 @@ val Context.timerDb: TimerDao
 
 val Context.timerHelper: TimerHelper
     get() = TimerHelper(this)
+
+val Context.routineDb: org.fossify.clock.interfaces.RoutineDao
+    get() = AppDatabase.getInstance(applicationContext).RoutineDao()
+
+val Context.routineHelper: org.fossify.clock.helpers.RoutineHelper
+    get() = org.fossify.clock.helpers.RoutineHelper(this)
+
+val Context.routineGroupDb: org.fossify.clock.interfaces.RoutineGroupDao
+    get() = AppDatabase.getInstance(applicationContext).RoutineGroupDao()
+
+val Context.routineGroupHelper: org.fossify.clock.helpers.RoutineGroupHelper
+    get() = org.fossify.clock.helpers.RoutineGroupHelper(this)
+
+val Context.routineController: org.fossify.clock.helpers.RoutineController
+    get() = org.fossify.clock.helpers.RoutineController.getInstance(applicationContext)
 
 val Context.alarmManager: AlarmManager
     get() = getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -586,4 +606,159 @@ fun Context.firstDayOrder(bitMask: Int): Int {
     }
 
     return bitMask
+}
+
+// ---- Routines ----
+
+fun Context.createNewRoutine(): org.fossify.clock.models.Routine {
+    val defaultAlarmSound = getDefaultAlarmSound(RingtoneManager.TYPE_ALARM)
+    return org.fossify.clock.models.Routine(
+        id = null,
+        label = "",
+        groupId = null,
+        intervalSeconds = 20 * 60,
+        isEnabled = true,
+        startTimeMinutes = 9 * 60,
+        endTimeMinutes = 18 * 60,
+        days = org.fossify.commons.helpers.EVERY_DAY_BIT,
+        vibrate = true,
+        soundUri = defaultAlarmSound.uri,
+        soundTitle = defaultAlarmSound.title,
+        notificationStyle = org.fossify.clock.models.ROUTINE_STYLE_CONTINUOUS,
+    )
+}
+
+fun Context.getRoutineIntent(routine: org.fossify.clock.models.Routine): PendingIntent {
+    val id = routine.id ?: 0
+    val intent = Intent(this, org.fossify.clock.receivers.RoutineReceiver::class.java)
+    intent.putExtra(ROUTINE_ID, id)
+    return PendingIntent.getBroadcast(
+        this,
+        id,
+        intent,
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    )
+}
+
+fun Context.scheduleRoutineAlarm(routine: org.fossify.clock.models.Routine, triggerTimeMillis: Long) {
+    try {
+        AlarmManagerCompat.setExactAndAllowWhileIdle(
+            alarmManager,
+            AlarmManager.RTC_WAKEUP,
+            triggerTimeMillis,
+            getRoutineIntent(routine)
+        )
+    } catch (e: Exception) {
+        showErrorToast(e)
+    }
+}
+
+fun Context.cancelRoutineAlarm(routine: org.fossify.clock.models.Routine) {
+    alarmManager.cancel(getRoutineIntent(routine))
+}
+
+fun Context.getOpenRoutineTabIntent(): PendingIntent {
+    val intent = getLaunchIntent() ?: Intent(this, SplashActivity::class.java)
+    intent.putExtra(OPEN_TAB, TAB_ROUTINE)
+    return PendingIntent.getActivity(
+        this,
+        OPEN_ROUTINE_TAB_INTENT_ID,
+        intent,
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    )
+}
+
+fun Context.getRoutineStopPendingIntent(routine: org.fossify.clock.models.Routine): PendingIntent {
+    val id = routine.id ?: 0
+    val intent = Intent(this, org.fossify.clock.receivers.RoutineStopReceiver::class.java).apply {
+        putExtra(ROUTINE_ID, id)
+    }
+    return PendingIntent.getBroadcast(
+        this,
+        ROUTINE_STOP_INTENT_ID_BASE + id,
+        intent,
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    )
+}
+
+/**
+ * Fires the actual user-facing reminder for a Routine trigger.
+ * - CONTINUA (default): short, non-blocking notification -- auto-cancels itself, and gets
+ *   replaced anyway by the next loop trigger's notification (same notification id).
+ * - DISCRETA: ongoing (non-dismissable-by-swipe) notification with an explicit "Stop" action,
+ *   representing the "line stays up until the user stops it" behavior from the toggle icon.
+ */
+fun Context.notifyRoutineFired(routine: org.fossify.clock.models.Routine) {
+    val channelId = "routine_channel_${routine.id}_${routine.soundUri}"
+    val isDiscreet = routine.notificationStyle == org.fossify.clock.models.ROUTINE_STYLE_DISCREET
+
+    try {
+        notificationManager.deleteNotificationChannel(channelId)
+    } catch (_: Exception) {
+    }
+
+    var soundUri = routine.soundUri
+    if (soundUri == SILENT) {
+        soundUri = ""
+    } else {
+        grantReadUriPermission(soundUri)
+    }
+
+    val audioAttributes = AudioAttributes.Builder()
+        .setUsage(AudioAttributes.USAGE_ALARM)
+        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+        .setLegacyStreamType(STREAM_ALARM)
+        .build()
+
+    val importance = if (isDiscreet) {
+        NotificationManager.IMPORTANCE_HIGH
+    } else {
+        NotificationManager.IMPORTANCE_DEFAULT
+    }
+
+    NotificationChannel(channelId, getString(R.string.routines), importance).apply {
+        setSound(soundUri.toUri(), audioAttributes)
+        enableVibration(routine.vibrate)
+        if (!routine.vibrate) {
+            vibrationPattern = longArrayOf(0L)
+        }
+        notificationManager.createNotificationChannel(this)
+    }
+
+    val title = routine.label.ifEmpty { getString(R.string.routines) }
+    val contentIntent = getOpenRoutineTabIntent()
+    val notificationId = ROUTINE_NOTIFICATION_ID_BASE + (routine.id ?: 0)
+
+    val builder = NotificationCompat.Builder(this, channelId)
+        .setContentTitle(title)
+        .setContentText(getString(R.string.routine_reminder_text))
+        .setSmallIcon(R.drawable.ic_routine_vector)
+        .setContentIntent(contentIntent)
+        .setChannelId(channelId)
+        .setSound(soundUri.toUri(), STREAM_ALARM)
+        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+
+    if (routine.vibrate) {
+        builder.setVibrate(LongArray(2) { 500 })
+    }
+
+    if (isDiscreet) {
+        builder
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setOngoing(true)
+            .setAutoCancel(false)
+            .addAction(
+                org.fossify.commons.R.drawable.ic_cross_vector,
+                getString(R.string.stop_routine),
+                getRoutineStopPendingIntent(routine)
+            )
+    } else {
+        builder
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setOngoing(false)
+            .setAutoCancel(true)
+            .setTimeoutAfter(10_000L)
+    }
+
+    notificationManager.notify(notificationId, builder.build())
 }

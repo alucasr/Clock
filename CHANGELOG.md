@@ -2,6 +2,12 @@
 
 Este proyecto es un fork personal de [Fossify Clock](https://github.com/FossifyOrg/Clock) con funcionalidades añadidas a medida.
 
+> **Nota sobre versionado (17-sep-2026):** a partir de aquí el segundo dígito de versión indica el hito de funcionalidad: `1.0.x` = fork original corregido, `1.1.x` = grupos de alarmas, `1.2.x` = rutinas (en validación). Las entradas anteriores a esta nota (1.0.0–1.0.3) se dejan tal cual en este fichero como registro histórico; sus tags de git equivalentes son ahora `v1.1.0`/`v1.1.1`/`v1.1.2`/`v1.1.3` — ver tags en el repositorio.
+
+## [1.1.3] - 2026-09-15
+
+Mismo contenido que la antigua v1.0.3 (ver más abajo), renombrada para reflejar el nuevo esquema de versionado.
+
 ## [1.0.3] - 2026-09-15
 
 - Nuevo: al crear una alarma o un temporizador nuevo, el campo de nombre queda vacío por defecto (antes heredaba el texto del último usado, dando la sensación de estar editando uno existente).

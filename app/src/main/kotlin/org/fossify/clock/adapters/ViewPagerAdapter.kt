@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import org.fossify.clock.fragments.AlarmFragment
 import org.fossify.clock.fragments.ClockFragment
+import org.fossify.clock.fragments.RoutineFragment
 import org.fossify.clock.fragments.StopwatchFragment
 import org.fossify.clock.fragments.TimerFragment
 import org.fossify.clock.helpers.*
@@ -38,6 +39,7 @@ class ViewPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
         TAB_ALARM_INDEX -> AlarmFragment()
         TAB_STOPWATCH_INDEX -> StopwatchFragment()
         TAB_TIMER_INDEX -> TimerFragment()
+        TAB_ROUTINE_INDEX -> RoutineFragment()
         else -> throw RuntimeException("Trying to fetch unknown fragment id $position")
     }
 
@@ -59,6 +61,10 @@ class ViewPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
 
     fun updateTimerTabAlarmSound(alarmSound: AlarmSound) {
         (fragments[TAB_TIMER_INDEX] as? TimerFragment)?.updateAlarmSound(alarmSound)
+    }
+
+    fun updateRoutineTabAlarmSound(alarmSound: AlarmSound) {
+        (fragments[TAB_ROUTINE_INDEX] as? RoutineFragment)?.updateRoutineSound(alarmSound)
     }
 
     fun updateTimerPosition(timerId: Int) {

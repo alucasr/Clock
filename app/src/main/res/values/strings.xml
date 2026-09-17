@@ -44,7 +44,7 @@
     <string name="all_groups">All</string>
     <string name="faq_changelog_title">Version history (personal fork)</string>
     <string name="app_tagline">A RatrichusEnterprise App</string>
-    <string name="faq_changelog_text">This Fossify Clock is a personal fork, based on the original open source Fossify project (github.com/FossifyOrg/Clock).\n\nv1.0.3 (current): new alarm/timer starts with a blank name field (no longer inherits the last used label), creating or editing a timer starts it right away and moves it to the top of the list (sorted by last used, not creation date), clearer drag button on the ringing screen (circular background with border and double-chevron arrows pointing both directions).\n\nv1.0.2: About screen states this is a personal fork with a link to the repository and version history.\n\nv1.0.1: fixes - \'Confirm\' button instead of \'OK\', keyboard no longer covers buttons when editing an alarm, alarms sorted by time by default, fixed sound on alarms and timers, group name shown as prefix in the \'All\' view, new alarm created from within a group inherits that group.\n\nv1.0.0: first version with alarm groups - create/rename/delete groups (with option on what to do with their alarms when deleting a group), enable/disable an entire group, filter alarms by group, group selector when editing an alarm.\n\nFull source code: github.com/alucasr/Clock</string>
+    <string name="faq_changelog_text">This Fossify Clock is a personal fork, based on the original open source Fossify project (github.com/FossifyOrg/Clock).\n\nv1.1.3 (current): new alarm/timer starts with a blank name field (no longer inherits the last used label), creating or editing a timer starts it right away and moves it to the top of the list (sorted by last used, not creation date), clearer drag button on the ringing screen (circular background with border and double-chevron arrows pointing both directions).\n\nv1.1.2: About screen states this is a personal fork with a link to the repository and version history.\n\nv1.1.1: fixes - \'Confirm\' button instead of \'OK\', keyboard no longer covers buttons when editing an alarm, alarms sorted by time by default, fixed sound on alarms and timers, group name shown as prefix in the \'All\' view, new alarm created from within a group inherits that group.\n\nv1.1.0: first version with alarm groups - create/rename/delete groups (with option on what to do with their alarms when deleting a group), enable/disable an entire group, filter alarms by group, group selector when editing an alarm.\n\nv1.0.0: corrected fork of the original Fossify Clock (github.com/FossifyOrg/Clock) before any custom features were added.\n\nFull source code: github.com/alucasr/Clock</string>
     <string name="new_group">New group</string>
     <string name="rename_group">Rename group</string>
     <string name="group_name">Group name</string>
@@ -54,6 +54,12 @@
     <string name="delete_group_keep_alarms">Delete group, keep alarms ungrouped</string>
     <string name="group_name_empty">Please enter a group name</string>
     <string name="group_already_exists">A group with this name already exists</string>
+
+    <!-- Routine Groups (independent from Alarm Groups) -->
+    <string name="manage_routine_groups">Manage routine groups</string>
+    <string name="delete_routine_group_confirmation">This group contains %d routine(s). What do you want to do with them?</string>
+    <string name="delete_group_and_routines">Delete group and its routines</string>
+    <string name="delete_group_keep_routines">Delete group, keep routines ungrouped</string>
 
     <!-- Timer -->
     <string name="timers_notification_msg">Timers are running</string>
@@ -83,4 +89,26 @@
         https://github.com/FossifyOrg/Commons/tree/master/commons/src/main/res
     -->
 
+    <!-- Routines -->
+    <string name="routines">Routines</string>
+    <string name="routine_tab">Routines tab</string>
+    <string name="no_routines_found">No routines found</string>
+    <string name="add_routine">Add routine</string>
+    <string name="new_routine">New routine</string>
+    <string name="routine_enabled">Enabled</string>
+    <string name="routine_reminder_text">Time for your routine</string>
+    <string name="stop_routine">Stop</string>
+    <string name="routine_invalid_time_range">End time must be after start time</string>
+    <string name="minutes_raw">min</string>
+    <string name="routine_style_continuous">Continuous</string>
+    <string name="routine_style_discreet">Discreet</string>
+
+    <string name="routine_every_x">Every %s</string>
+
+    <plurals name="routine_group_count">
+        <item quantity="one">%d routine</item>
+        <item quantity="other">%d routines</item>
+    </plurals>
+
 </resources>
+

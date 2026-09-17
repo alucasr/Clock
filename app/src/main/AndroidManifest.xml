@@ -168,6 +168,10 @@
 
         <receiver android:name=".receivers.AlarmReceiver" />
 
+        <receiver android:name=".receivers.RoutineReceiver" />
+
+        <receiver android:name=".receivers.RoutineStopReceiver" />
+
         <receiver android:name=".receivers.HideTimerReceiver" />
 
         <receiver android:name=".receivers.StopAlarmReceiver" />

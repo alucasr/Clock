@@ -29,6 +29,7 @@ import org.fossify.clock.helpers.getTomorrowBit
 import org.fossify.clock.interfaces.ToggleAlarmInterface
 import org.fossify.clock.models.Alarm
 import org.fossify.clock.models.AlarmEvent
+import org.fossify.commons.extensions.applyColorFilter
 import org.fossify.commons.extensions.beVisibleIf
 import org.fossify.commons.extensions.getProperBackgroundColor
 import org.fossify.commons.extensions.getProperPrimaryColor
@@ -185,20 +186,26 @@ class AlarmFragment : Fragment(), ToggleAlarmInterface {
     }
 
     /**
-     * Builds the horizontal "All / <group> / ... / Manage" filter row shown above the
-     * alarms list. Tapping a group filters the list to that group's alarms; tapping
-     * "Manage" opens group CRUD. Groups are shown alphabetically, as requested.
+     * Builds the horizontal "All / <group> / ..." filter row shown above the alarms list.
+     * Tapping a group filters the list to that group's alarms. Group management is a separate
+     * gear icon (not a chip) so it can never be mistaken for an actual group filter. Groups are
+     * shown alphabetically, as requested.
      */
     private fun setupGroupFilters() {
         val safeContext = context ?: return
         val safeActivity = activity as? SimpleActivity ?: return
         val groups = safeContext.dbHelper.getGroups().sortedBy { it.title.lowercase() }
 
-        binding.alarmGroupsFilterScroll.beVisibleIf(groups.isNotEmpty())
-        if (groups.isEmpty()) {
-            selectedGroupFilterId = null
-            return
+        binding.alarmGroupsManageIcon.applyColorFilter(safeContext.getProperTextColor())
+        binding.alarmGroupsManageIcon.setOnClickListener {
+            ManageGroupsDialog(safeActivity) {
+                setupAlarms()
+            }
         }
+
+        // The filter row (chips + gear icon) is always shown so group management stays
+        // reachable even with zero groups defined yet.
+        binding.alarmGroupsFilterRow.beVisibleIf(true)
 
         // if the previously selected group filter got deleted, fall back to "All"
         if (selectedGroupFilterId != null && groups.none { it.id == selectedGroupFilterId }) {
@@ -233,20 +240,6 @@ class AlarmFragment : Fragment(), ToggleAlarmInterface {
         groups.forEach { group ->
             addChip(group.id, group.title)
         }
-
-        val manageBinding = ItemGroupChipBinding.inflate(layoutInflater, binding.alarmGroupsFilterHolder, false)
-        manageBinding.groupChipText.apply {
-            text = getString(R.string.manage_groups)
-            background = background.mutate()
-            setTextColor(textColor)
-            (background as? android.graphics.drawable.GradientDrawable)?.setStroke(2, textColor)
-            setOnClickListener {
-                ManageGroupsDialog(safeActivity) {
-                    setupAlarms()
-                }
-            }
-        }
-        binding.alarmGroupsFilterHolder.addView(manageBinding.root)
     }
 
     private fun openEditAlarm(alarm: Alarm) {

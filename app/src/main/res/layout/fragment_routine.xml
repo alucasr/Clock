@@ -2,17 +2,17 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/alarm_fragment"
+    android:id="@+id/routine_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/alarm_holder"
+        android:id="@+id/routine_holder"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/alarm_groups_filter_row"
+            android:id="@+id/routine_groups_filter_row"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -22,7 +22,7 @@
             tools:visibility="visible">
 
             <HorizontalScrollView
-                android:id="@+id/alarm_groups_filter_scroll"
+                android:id="@+id/routine_groups_filter_scroll"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -30,7 +30,7 @@
                 android:scrollbars="none">
 
                 <LinearLayout
-                    android:id="@+id/alarm_groups_filter_holder"
+                    android:id="@+id/routine_groups_filter_holder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -39,34 +39,34 @@
             </HorizontalScrollView>
 
             <ImageView
-                android:id="@+id/alarm_groups_manage_icon"
+                android:id="@+id/routine_groups_manage_icon"
                 android:layout_width="@dimen/drag_handle_size"
                 android:layout_height="@dimen/drag_handle_size"
                 android:layout_marginEnd="@dimen/small_margin"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/manage_groups"
+                android:contentDescription="@string/manage_routine_groups"
                 android:padding="@dimen/tiny_margin"
                 android:src="@drawable/ic_settings_cog_vector" />
 
         </LinearLayout>
 
         <org.fossify.commons.views.MyRecyclerView
-            android:id="@+id/alarms_list"
+            android:id="@+id/routines_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/alarm_groups_filter_row"
+            android:layout_below="@id/routine_groups_filter_row"
             android:clipToPadding="false"
             android:overScrollMode="ifContentScrolls"
             android:paddingBottom="@dimen/fab_list_bottom_padding"
             android:scrollbars="none"
             app:layoutManager="org.fossify.commons.views.MyLinearLayoutManager"
-            tools:listitem="@layout/item_alarm" />
+            tools:listitem="@layout/item_routine" />
 
         <org.fossify.commons.views.MyTextView
-            android:id="@+id/alarms_placeholder"
+            android:id="@+id/routines_placeholder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/alarm_groups_filter_row"
+            android:layout_below="@id/routine_groups_filter_row"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/small_margin"
             android:alpha="0.8"
@@ -74,7 +74,7 @@
             android:paddingStart="@dimen/activity_margin"
             android:paddingTop="@dimen/activity_margin"
             android:paddingEnd="@dimen/activity_margin"
-            android:text="@string/no_alarms_found"
+            android:text="@string/no_routines_found"
             android:textSize="@dimen/bigger_text_size"
             android:textStyle="italic"
             android:visibility="gone" />
@@ -82,7 +82,7 @@
     </RelativeLayout>
 
     <org.fossify.commons.views.MyFloatingActionButton
-        android:id="@+id/alarm_fab"
+        android:id="@+id/routine_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

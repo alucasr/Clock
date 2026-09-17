@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/routine_holder"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="@drawable/selector"
+    android:paddingHorizontal="@dimen/activity_margin"
+    android:paddingVertical="@dimen/medium_margin">
+
+    <org.fossify.commons.views.MyTextView
+        android:id="@+id/routine_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:textSize="@dimen/bigger_text_size"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/routine_switch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Beber agua" />
+
+    <org.fossify.commons.views.MyTextView
+        android:id="@+id/routine_interval"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/tiny_margin"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:textSize="@dimen/normal_text_size"
+        app:layout_constraintEnd_toStartOf="@id/routine_switch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/routine_label"
+        tools:text="Cada 20 min" />
+
+    <org.fossify.commons.views.MyTextView
+        android:id="@+id/routine_time_range"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:textSize="@dimen/normal_text_size"
+        app:layout_constraintEnd_toStartOf="@id/routine_switch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/routine_interval"
+        tools:text="09:00 - 18:00" />
+
+    <org.fossify.commons.views.MyTextView
+        android:id="@+id/routine_days"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:paddingTop="@dimen/tiny_margin"
+        android:textSize="@dimen/bigger_text_size"
+        app:layout_constraintEnd_toStartOf="@id/routine_switch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/routine_time_range"
+        tools:text="L M X J V" />
+
+    <org.fossify.commons.views.MyTextView
+        android:id="@+id/routine_group"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:alpha="0.7"
+        android:textSize="@dimen/smaller_text_size"
+        app:layout_constraintEnd_toStartOf="@id/routine_switch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/routine_days"
+        tools:text="Salud" />
+
+    <org.fossify.commons.views.MyMaterialSwitch
+        android:id="@+id/routine_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/normal_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
