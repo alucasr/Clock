@@ -26,6 +26,11 @@
     <string name="alarm_dismissed">Alarm dismissed</string>
     <string name="select_timer_to_dismiss">Select timer to dismiss</string>
     <string name="select_alarm_to_dismiss">Select alarm to dismiss</string>
+    <string name="disable_alarm_title">Disable alarm</string>
+    <string name="disable_alarm_skip_next_only">Skip only the next time</string>
+    <string name="disable_alarm_skip_next_only_description">The alarm keeps repeating normally, just won\'t ring the next time it\'s due</string>
+    <string name="disable_alarm_completely">Disable completely</string>
+    <string name="disable_alarm_completely_description">The alarm is turned off until you re-enable it</string>
     <string name="alarm_created">Alarm created</string>
     <string name="alarm_snoozed">Alarm snoozed by %s</string>
     <string name="no_alarms_found">No alarms found</string>

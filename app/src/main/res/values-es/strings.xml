@@ -25,6 +25,11 @@
     <string name="alarm_dismissed">Alarma desechada</string>
     <string name="select_timer_to_dismiss">Selecciona el temporizador que quieres descartar</string>
     <string name="select_alarm_to_dismiss">Selecciona la alarma que quieres descartar</string>
+    <string name="disable_alarm_title">Deshabilitar alarma</string>
+    <string name="disable_alarm_skip_next_only">Saltar solo la próxima vez</string>
+    <string name="disable_alarm_skip_next_only_description">La alarma sigue repitiéndose con normalidad, simplemente no sonará la próxima vez que le toque</string>
+    <string name="disable_alarm_completely">Deshabilitar por completo</string>
+    <string name="disable_alarm_completely_description">La alarma se desactiva hasta que la vuelvas a habilitar</string>
     <string name="alarm_created">Alarma creada</string>
     <string name="alarm_snoozed">Repetir alarma en %s</string>
     <string name="no_alarms_found">No se encontraron alarmas</string>

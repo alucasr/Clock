@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.fossify.clock.R
 import org.fossify.clock.activities.SimpleActivity
 import org.fossify.clock.databinding.ItemAlarmBinding
+import org.fossify.clock.dialogs.DisableAlarmDialog
 import org.fossify.clock.extensions.config
 import org.fossify.clock.extensions.dbHelper
 import org.fossify.clock.extensions.getFormattedTime
@@ -189,22 +190,27 @@ class AlarmsAdapter(
     }
 
     private fun toggleAlarm(binding: ItemAlarmBinding, alarm: Alarm) {
-        when {
-            alarm.isRecurring() -> {
-                if (activity.config.wasAlarmWarningShown) {
-                    toggleAlarmInterface.alarmToggled(alarm.id, binding.alarmSwitch.isChecked)
+        val isBeingDisabled = !binding.alarmSwitch.isChecked
+        if (alarm.isRecurring() && isBeingDisabled) {
+            // Ask whether to skip just the next occurrence or disable the alarm completely.
+            // Revert the switch to "on" immediately -- it only reflects the final choice once
+            // the user picks an option (or stays on if the dialog is dismissed without one).
+            binding.alarmSwitch.isChecked = true
+            DisableAlarmDialog(activity) { skipNextOnly ->
+                if (skipNextOnly) {
+                    activity.dbHelper.updateAlarmNextExecutionCancelled(alarm.id, true)
+                    alarm.isNextExecutionCancelled = true
+                    org.greenrobot.eventbus.EventBus.getDefault().post(AlarmEvent.Refresh)
                 } else {
-                    ConfirmationDialog(
-                        activity = activity,
-                        messageId = org.fossify.commons.R.string.alarm_warning,
-                        positive = org.fossify.commons.R.string.ok,
-                        negative = 0
-                    ) {
-                        activity.config.wasAlarmWarningShown = true
-                        toggleAlarmInterface.alarmToggled(alarm.id, binding.alarmSwitch.isChecked)
-                    }
+                    binding.alarmSwitch.isChecked = false
+                    proceedToggleRecurringAlarm(binding, alarm)
                 }
             }
+            return
+        }
+
+        when {
+            alarm.isRecurring() -> proceedToggleRecurringAlarm(binding, alarm)
 
             else -> {
                 updateNonRecurringAlarmDay(alarm)
@@ -212,6 +218,22 @@ class AlarmsAdapter(
                 binding.alarmDays.text = getAlarmSelectedDaysString(
                     alarm = alarm, isEnabled = binding.alarmSwitch.isChecked
                 )
+                toggleAlarmInterface.alarmToggled(alarm.id, binding.alarmSwitch.isChecked)
+            }
+        }
+    }
+
+    private fun proceedToggleRecurringAlarm(binding: ItemAlarmBinding, alarm: Alarm) {
+        if (activity.config.wasAlarmWarningShown) {
+            toggleAlarmInterface.alarmToggled(alarm.id, binding.alarmSwitch.isChecked)
+        } else {
+            ConfirmationDialog(
+                activity = activity,
+                messageId = org.fossify.commons.R.string.alarm_warning,
+                positive = org.fossify.commons.R.string.ok,
+                negative = 0
+            ) {
+                activity.config.wasAlarmWarningShown = true
                 toggleAlarmInterface.alarmToggled(alarm.id, binding.alarmSwitch.isChecked)
             }
         }
