@@ -22,6 +22,7 @@ import org.fossify.clock.extensions.dbHelper
 import org.fossify.clock.extensions.firstDayOrder
 import org.fossify.clock.extensions.handleFullScreenNotificationsPermission
 import org.fossify.clock.extensions.updateWidgets
+import org.fossify.clock.helpers.ALARM_LIST_SCROLL_FROM_CURRENT_TIME
 import org.fossify.clock.helpers.DEFAULT_ALARM_MINUTES
 import org.fossify.clock.helpers.SORT_BY_ALARM_TIME
 import org.fossify.clock.helpers.SORT_BY_DATE_AND_TIME
@@ -207,6 +208,7 @@ class AlarmFragment : Fragment(), ToggleAlarmInterface {
     private fun scrollToCurrentTimeIfNeeded(safeContext: android.content.Context) {
         if (hasAutoScrolledToCurrentTime) return
         if (selectedGroupFilterId != null) return
+        if (safeContext.config.alarmListScrollMode != ALARM_LIST_SCROLL_FROM_CURRENT_TIME) return
         if (safeContext.config.alarmSort != SORT_BY_ALARM_TIME) return
         if (alarms.isEmpty()) return
 
@@ -219,7 +221,16 @@ class AlarmFragment : Fragment(), ToggleAlarmInterface {
         val scrollToIndex = if (targetIndex != -1) targetIndex else alarms.size - 1
 
         binding.alarmsList.post {
-            binding.alarmsList.scrollToPosition(scrollToIndex)
+            // scrollToPosition() only scrolls the minimum amount needed to bring the item into
+            // view, which can leave earlier alarms still visible above it. Force it to the very
+            // top of the list instead via the layout manager, with zero offset.
+            val layoutManager =
+                binding.alarmsList.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager
+            if (layoutManager != null) {
+                layoutManager.scrollToPositionWithOffset(scrollToIndex, 0)
+            } else {
+                binding.alarmsList.scrollToPosition(scrollToIndex)
+            }
         }
     }
 

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/alarm_list_scroll_mode_dialog_scrollview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RadioGroup
+        android:id="@+id/alarm_list_scroll_mode_dialog_radio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/medium_margin"
+        android:paddingStart="@dimen/activity_margin"
+        android:paddingTop="@dimen/activity_margin"
+        android:paddingEnd="@dimen/activity_margin">
+
+        <org.fossify.commons.views.MyCompatRadioButton
+            android:id="@+id/alarm_list_scroll_mode_dialog_radio_beginning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/medium_margin"
+            android:paddingBottom="@dimen/medium_margin"
+            android:text="@string/alarm_list_scroll_from_beginning" />
+
+        <org.fossify.commons.views.MyCompatRadioButton
+            android:id="@+id/alarm_list_scroll_mode_dialog_radio_current_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/medium_margin"
+            android:paddingBottom="@dimen/medium_margin"
+            android:text="@string/alarm_list_scroll_from_current_time" />
+
+    </RadioGroup>
+</ScrollView>

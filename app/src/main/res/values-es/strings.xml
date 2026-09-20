@@ -30,6 +30,9 @@
     <string name="disable_alarm_skip_next_only_description">La alarma sigue repitiéndose con normalidad, simplemente no sonará la próxima vez que le toque</string>
     <string name="disable_alarm_completely">Deshabilitar por completo</string>
     <string name="disable_alarm_completely_description">La alarma se desactiva hasta que la vuelvas a habilitar</string>
+    <string name="alarm_list_scroll_mode">Punto de inicio de la lista de alarmas</string>
+    <string name="alarm_list_scroll_from_beginning">Desde el principio</string>
+    <string name="alarm_list_scroll_from_current_time">Desde la hora actual</string>
     <string name="alarm_created">Alarma creada</string>
     <string name="alarm_snoozed">Repetir alarma en %s</string>
     <string name="no_alarms_found">No se encontraron alarmas</string>

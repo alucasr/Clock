@@ -31,6 +31,9 @@
     <string name="disable_alarm_skip_next_only_description">The alarm keeps repeating normally, just won\'t ring the next time it\'s due</string>
     <string name="disable_alarm_completely">Disable completely</string>
     <string name="disable_alarm_completely_description">The alarm is turned off until you re-enable it</string>
+    <string name="alarm_list_scroll_mode">Alarm list starting point</string>
+    <string name="alarm_list_scroll_from_beginning">From the beginning</string>
+    <string name="alarm_list_scroll_from_current_time">From the current time</string>
     <string name="alarm_created">Alarm created</string>
     <string name="alarm_snoozed">Alarm snoozed by %s</string>
     <string name="no_alarms_found">No alarms found</string>

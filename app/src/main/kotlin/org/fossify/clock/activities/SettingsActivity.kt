@@ -90,6 +90,7 @@ class SettingsActivity : SimpleActivity() {
         setupPreventPhoneFromSleeping()
         setupStartWeekOn()
         setupUpcomingAlarmLeadTime()
+        setupAlarmListScrollMode()
         setupAlarmMaxReminder()
         setupUseSameSnooze()
         setupSnoozeTime()
@@ -225,6 +226,15 @@ class SettingsActivity : SimpleActivity() {
         }
     }
 
+    private fun setupAlarmListScrollMode() {
+        updateAlarmListScrollModeText()
+        binding.settingsAlarmListScrollModeHolder.setOnClickListener {
+            org.fossify.clock.dialogs.ChangeAlarmListScrollModeDialog(this) {
+                updateAlarmListScrollModeText()
+            }
+        }
+    }
+
     private fun setupAlarmMaxReminder() {
         updateAlarmMaxReminderText()
         binding.settingsAlarmMaxReminderHolder.setOnClickListener {
@@ -296,6 +306,16 @@ class SettingsActivity : SimpleActivity() {
     private fun updateUpcomingAlarmLeadTimeText() {
         binding.settingsUpcomingAlarmLeadTime.text =
             formatMinutesToTimeString(config.upcomingAlarmLeadMinutes)
+    }
+
+    private fun updateAlarmListScrollModeText() {
+        binding.settingsAlarmListScrollMode.text = getString(
+            if (config.alarmListScrollMode == org.fossify.clock.helpers.ALARM_LIST_SCROLL_FROM_BEGINNING) {
+                R.string.alarm_list_scroll_from_beginning
+            } else {
+                R.string.alarm_list_scroll_from_current_time
+            }
+        )
     }
 
     private fun updateTimerMaxReminderText() {

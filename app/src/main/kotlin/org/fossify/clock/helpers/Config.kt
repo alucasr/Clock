@@ -68,6 +68,12 @@ class Config(context: Context) : BaseConfig(context) {
         get() = prefs.getInt(ALARMS_SORT_BY, SORT_BY_ALARM_TIME)
         set(alarmSort) = prefs.edit { putInt(ALARMS_SORT_BY, alarmSort) }
 
+    var alarmListScrollMode: Int
+        get() = prefs.getInt(ALARM_LIST_SCROLL_MODE, ALARM_LIST_SCROLL_FROM_CURRENT_TIME)
+        set(alarmListScrollMode) = prefs.edit {
+            putInt(ALARM_LIST_SCROLL_MODE, alarmListScrollMode)
+        }
+
     var alarmsCustomSorting: String
         get() = prefs.getString(ALARMS_CUSTOM_SORTING, "")!!
         set(alarmsCustomSorting) = prefs.edit {
