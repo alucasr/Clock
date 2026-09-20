@@ -51,6 +51,10 @@ class AlarmFragment : Fragment(), ToggleAlarmInterface {
     // null = "All groups" filter selected (default)
     private var selectedGroupFilterId: Int? = null
 
+    // Only auto-scroll to the current time once per fragment lifecycle, so it doesn't fight
+    // the user's own scrolling on every minor list refresh (toggle, edit, etc.).
+    private var hasAutoScrolledToCurrentTime = false
+
     private lateinit var binding: FragmentAlarmBinding
 
     override fun onCreateView(
@@ -182,6 +186,40 @@ class AlarmFragment : Fragment(), ToggleAlarmInterface {
                 }
             }
             binding.alarmsPlaceholder.beVisibleIf(alarms.isEmpty())
+            scrollToCurrentTimeIfNeeded(safeContext)
+        }
+    }
+
+    /**
+     * Scrolls the "All" list (no group filter) so it opens showing alarms from the current hour
+     * onwards, instead of always from the very first alarm of the day. Only applies once per
+     * fragment lifecycle and only when sorted by alarm time -- with any other sort order the
+     * list isn't chronological, so "scroll to current time" wouldn't mean anything coherent.
+     *
+     * Threshold is the start of the *current* hour (e.g. at 20:40 the threshold is 20:00), so
+     * scrolling reveals every alarm from this hour onwards, including ones already due today.
+     * Enabled state is ignored -- an alarm counts by its time regardless of on/off.
+     *
+     * - If some alarm's time >= threshold, scroll so that first matching alarm is at the top.
+     * - If none qualify (all alarms are earlier than the threshold), scroll to the end of the
+     *   list so the last (latest) alarms are visible.
+     */
+    private fun scrollToCurrentTimeIfNeeded(safeContext: android.content.Context) {
+        if (hasAutoScrolledToCurrentTime) return
+        if (selectedGroupFilterId != null) return
+        if (safeContext.config.alarmSort != SORT_BY_ALARM_TIME) return
+        if (alarms.isEmpty()) return
+
+        hasAutoScrolledToCurrentTime = true
+
+        val calendar = java.util.Calendar.getInstance()
+        val thresholdMinutes = calendar.get(java.util.Calendar.HOUR_OF_DAY) * 60
+
+        val targetIndex = alarms.indexOfFirst { it.timeInMinutes >= thresholdMinutes }
+        val scrollToIndex = if (targetIndex != -1) targetIndex else alarms.size - 1
+
+        binding.alarmsList.post {
+            binding.alarmsList.scrollToPosition(scrollToIndex)
         }
     }
 
