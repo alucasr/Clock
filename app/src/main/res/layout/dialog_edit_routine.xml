@@ -191,7 +191,7 @@
                 android:layout_height="@dimen/drag_handle_size"
                 android:layout_alignParentEnd="true"
                 android:padding="@dimen/tiny_margin"
-                android:src="@drawable/ic_folder_vector" />
+                android:src="@drawable/ic_settings_cog_vector" />
 
         </RelativeLayout>
 

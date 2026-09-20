@@ -129,16 +129,18 @@ class RoutineController(
      * Schedules the given routine's next occurrence:
      * - if [isInitial] (app start, save, toggle-on, or "ran out of window"): find the next
      *   valid day's startTimeMinutes, UNLESS we are already inside today's active window, in
-     *   which case resume immediately from "now" (rounded to the next interval boundary is not
-     *   necessary -- we simply pick up right where a running loop would be, i.e. fire once now
-     *   plus intervalMinutes going forward is handled by the receiver itself on next trigger).
+     *   which case resume immediately from "now".
+     * - Either way, the routine behaves like a timer once it starts: starting/resuming it never
+     *   fires the reminder by itself -- it only arms the countdown. The reminder only fires once
+     *   a full [Routine.intervalSeconds] has elapsed from that starting point, so we schedule the
+     *   alarm at (start point + intervalSeconds), not at the start point itself.
      */
     private fun scheduleNext(routine: Routine, isInitial: Boolean) {
         val now = Calendar.getInstance()
         val nowMinutes = now.get(Calendar.HOUR_OF_DAY) * 60 + now.get(Calendar.MINUTE)
         val isTodayValid = routine.days.isBitSet(getDayNumber(now.get(Calendar.DAY_OF_WEEK)))
 
-        val triggerCalendar: Calendar? = if (
+        val startPoint: Calendar? = if (
             isInitial && isTodayValid &&
             nowMinutes >= routine.startTimeMinutes &&
             nowMinutes < routine.endTimeMinutes
@@ -150,7 +152,10 @@ class RoutineController(
             getTimeOfNextRoutineStart(routine.startTimeMinutes, routine.days)
         }
 
-        if (triggerCalendar != null) {
+        if (startPoint != null) {
+            val triggerCalendar = (startPoint.clone() as Calendar).apply {
+                add(Calendar.SECOND, routine.intervalSeconds)
+            }
             context.scheduleRoutineAlarm(routine, triggerCalendar.timeInMillis)
         }
     }

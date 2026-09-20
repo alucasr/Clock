@@ -9,10 +9,10 @@ import org.fossify.clock.activities.SimpleActivity
 import org.fossify.clock.databinding.ItemRoutineBinding
 import org.fossify.clock.extensions.getFormattedTime
 import org.fossify.clock.extensions.routineHelper
+import org.fossify.clock.extensions.toCompactDurationString
 import org.fossify.clock.models.Routine
 import org.fossify.clock.models.RoutineEvent
 import org.fossify.commons.adapters.MyRecyclerViewAdapter
-import org.fossify.commons.extensions.getFormattedDuration
 import org.fossify.commons.extensions.getSelectedDaysString
 import org.fossify.commons.helpers.EVERY_DAY_BIT
 import org.fossify.commons.views.MyRecyclerView
@@ -122,7 +122,7 @@ class RoutinesAdapter(
             routineLabel.setTextColor(textColor)
 
             routineInterval.text = activity.getString(
-                R.string.routine_every_x, routine.intervalSeconds.getFormattedDuration(forceShowHours = true)
+                R.string.routine_every_x, routine.intervalSeconds.toCompactDurationString()
             )
             routineInterval.setTextColor(textColor)
 
