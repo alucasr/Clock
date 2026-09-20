@@ -17,6 +17,7 @@ data class Alarm(
     var label: String,
     var oneShot: Boolean = false,
     var groupId: Int? = null,
+    var isNextExecutionCancelled: Boolean = false,
 ) {
     fun isRecurring() = days > 0
 

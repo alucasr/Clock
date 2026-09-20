@@ -42,6 +42,7 @@
                 android:id="@+id/alarm_groups_manage_icon"
                 android:layout_width="@dimen/drag_handle_size"
                 android:layout_height="@dimen/drag_handle_size"
+                android:layout_marginStart="@dimen/normal_margin"
                 android:layout_marginEnd="@dimen/small_margin"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/manage_groups"

@@ -12,6 +12,7 @@
     <string name="stopwatch_stopped">El cronómetro se ha detenido</string>
     <string name="timer_stopped">El temporizador se ha detenido</string>
     <string name="max_reminder_duration">Duración máxima del recordatorio</string>
+    <string name="upcoming_alarm_lead_time">Aviso previo en notificaciones de alarma</string>
     <string name="time_expired">Tiempo terminado</string>
     <string name="clock_and_date">Fecha y hora</string>
     <string name="use_text_shadow">Usar sombra en el texto</string>

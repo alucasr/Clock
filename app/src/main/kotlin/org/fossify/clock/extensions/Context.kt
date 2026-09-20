@@ -49,7 +49,7 @@ import org.fossify.clock.helpers.TIMER_ID
 import org.fossify.clock.helpers.TODAY_BIT
 import org.fossify.clock.helpers.TOMORROW_BIT
 import org.fossify.clock.helpers.TimerHelper
-import org.fossify.clock.helpers.UPCOMING_ALARM_INTENT_ID
+import org.fossify.clock.helpers.UPCOMING_ALARM_INTENT_ID_BASE
 import org.fossify.clock.helpers.formatTime
 import org.fossify.clock.helpers.getAllTimeZones
 import org.fossify.clock.helpers.getDefaultTimeZoneTitle
@@ -221,12 +221,14 @@ fun Context.setupAlarmClock(alarm: Alarm, triggerTimeMillis: Long) {
             getAlarmIntent(alarm)
         )
 
-        // show a notification to allow dismissing the alarm 10 minutes before it actually triggers
+        // show a notification to allow dismissing the alarm N minutes before it actually
+        // triggers (N is user-configurable in Settings, default 10)
+        val leadTimeMillis = config.upcomingAlarmLeadMinutes.minutes.inWholeMilliseconds
         val dismissalTriggerTime =
-            if (triggerTimeMillis - System.currentTimeMillis() < 10.minutes.inWholeMilliseconds) {
+            if (triggerTimeMillis - System.currentTimeMillis() < leadTimeMillis) {
                 System.currentTimeMillis() + 500
             } else {
-                triggerTimeMillis - 10.minutes.inWholeMilliseconds
+                triggerTimeMillis - leadTimeMillis
             }
 
         AlarmManagerCompat.setExactAndAllowWhileIdle(
@@ -247,7 +249,7 @@ fun Context.getUpcomingAlarmPendingIntent(alarm: Alarm): PendingIntent {
 
     return PendingIntent.getBroadcast(
         this,
-        UPCOMING_ALARM_INTENT_ID,
+        UPCOMING_ALARM_INTENT_ID_BASE + alarm.id,
         intent,
         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
@@ -259,6 +261,24 @@ fun Context.getOpenAlarmTabIntent(): PendingIntent {
     return PendingIntent.getActivity(
         this,
         OPEN_ALARMS_TAB_INTENT_ID,
+        intent,
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    )
+}
+
+/**
+ * Same as [getOpenAlarmTabIntent] but with a request code unique to [requestCode] (typically an
+ * alarm id). Needed for the upcoming-alarm notifications: when several of them are visible at
+ * once and all share the exact same content PendingIntent, Android/some OEM skins treat tapping
+ * one auto-cancelable notification as clearing every other notification using that identical
+ * PendingIntent -- so each alarm needs its own distinct content intent to dismiss only itself.
+ */
+fun Context.getOpenAlarmTabIntent(requestCode: Int): PendingIntent {
+    val intent = getLaunchIntent() ?: Intent(this, SplashActivity::class.java)
+    intent.putExtra(OPEN_TAB, TAB_ALARM)
+    return PendingIntent.getActivity(
+        this,
+        OPEN_ALARMS_TAB_INTENT_ID + requestCode,
         intent,
         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
@@ -409,15 +429,16 @@ fun Context.getClosestEnabledAlarmString(callback: (result: String) -> Unit) {
 
         val now = Calendar.getInstance()
         val nextAlarmList = enabledAlarms
-            .mapNotNull(::getTimeOfNextAlarm)
-            .filter { it > now }
+            .mapNotNull { alarm -> getTimeOfNextAlarm(alarm)?.let { alarm to it } }
+            .filter { (_, time) -> time > now }
 
-        val closestAlarmTime = nextAlarmList.minOrNull()
-        if (closestAlarmTime == null) {
+        val closestAlarm = nextAlarmList.minByOrNull { (_, time) -> time }
+        if (closestAlarm == null) {
             callback("")
             return@getEnabledAlarms
         }
 
+        val (alarm, closestAlarmTime) = closestAlarm
         val dayOfWeekIndex = (closestAlarmTime.get(Calendar.DAY_OF_WEEK) + 5) % 7
         val dayOfWeek =
             resources.getStringArray(org.fossify.commons.R.array.week_days_short)[dayOfWeekIndex]
@@ -429,8 +450,31 @@ fun Context.getClosestEnabledAlarmString(callback: (result: String) -> Unit) {
 
         val formattedTime =
             SimpleDateFormat(pattern, Locale.getDefault()).format(closestAlarmTime.time)
-        callback("$dayOfWeek $formattedTime")
+        val displayLabel = getAlarmDisplayLabel(alarm)
+        val result = if (displayLabel.isEmpty()) {
+            "$dayOfWeek $formattedTime"
+        } else {
+            "$dayOfWeek $formattedTime - $displayLabel"
+        }
+        callback(result)
     }
+}
+
+/**
+ * Builds the "(Group) Label" text used to identify an alarm to the user -- shown in the
+ * upcoming-alarm notification, the clock screen's next-alarm line, and the home screen widget.
+ * Mirrors AlarmsAdapter.buildDisplayLabel(). Returns "" if the alarm has neither a label nor a
+ * (title-bearing) group, so callers can fall back to just the time.
+ */
+fun Context.getAlarmDisplayLabel(alarm: org.fossify.clock.models.Alarm): String {
+    val groupId = alarm.groupId
+    val prefix = if (groupId != null) {
+        val groupTitle = dbHelper.getGroupWithId(groupId)?.title
+        if (groupTitle.isNullOrEmpty()) "" else "($groupTitle) "
+    } else {
+        ""
+    }
+    return prefix + alarm.label
 }
 
 fun Context.getEnabledAlarms(callback: (result: List<Alarm>?) -> Unit) {

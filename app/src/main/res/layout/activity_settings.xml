@@ -218,6 +218,29 @@
                 android:text="@string/alarm_tab" />
 
             <RelativeLayout
+                android:id="@+id/settings_upcoming_alarm_lead_time_holder"
+                style="@style/SettingsHolderTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <org.fossify.commons.views.MyTextView
+                    android:id="@+id/settings_upcoming_alarm_lead_time_label"
+                    style="@style/SettingsTextLabelStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/upcoming_alarm_lead_time" />
+
+                <org.fossify.commons.views.MyTextView
+                    android:id="@+id/settings_upcoming_alarm_lead_time"
+                    style="@style/SettingsTextValueStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/settings_upcoming_alarm_lead_time_label"
+                    tools:text="10 minutes" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/settings_alarm_max_reminder_holder"
                 style="@style/SettingsHolderTextViewStyle"
                 android:layout_width="match_parent"

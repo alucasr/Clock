@@ -11,6 +11,6 @@
     android:maxLines="1"
     android:paddingHorizontal="@dimen/normal_margin"
     android:paddingVertical="@dimen/tiny_margin"
-    android:textSize="@dimen/smaller_text_size"
+    android:textSize="16sp"
     tools:text="Trabajo"
     xmlns:tools="http://schemas.android.com/tools" />

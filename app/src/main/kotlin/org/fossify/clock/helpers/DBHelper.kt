@@ -37,6 +37,7 @@ class DBHelper private constructor(
     private val COL_LABEL = "label"
     private val COL_ONE_SHOT = "one_shot"
     private val COL_GROUP_ID = "group_id"
+    private val COL_NEXT_EXECUTION_CANCELLED = "next_execution_cancelled"
 
     private val GROUPS_TABLE_NAME = "alarm_groups"
     private val COL_GROUP_ROW_ID = "id"
@@ -46,7 +47,7 @@ class DBHelper private constructor(
     private val mDb = writableDatabase
 
     companion object {
-        private const val DB_VERSION = 3
+        private const val DB_VERSION = 4
         const val DB_NAME = "alarms.db"
 
         @SuppressLint("StaticFieldLeak")
@@ -64,7 +65,8 @@ class DBHelper private constructor(
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(
             "CREATE TABLE IF NOT EXISTS $ALARMS_TABLE_NAME ($COL_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COL_TIME_IN_MINUTES INTEGER, $COL_DAYS INTEGER, " +
-                "$COL_IS_ENABLED INTEGER, $COL_VIBRATE INTEGER, $COL_SOUND_TITLE TEXT, $COL_SOUND_URI TEXT, $COL_LABEL TEXT, $COL_ONE_SHOT INTEGER, $COL_GROUP_ID INTEGER)"
+                "$COL_IS_ENABLED INTEGER, $COL_VIBRATE INTEGER, $COL_SOUND_TITLE TEXT, $COL_SOUND_URI TEXT, $COL_LABEL TEXT, $COL_ONE_SHOT INTEGER, $COL_GROUP_ID INTEGER, " +
+                "$COL_NEXT_EXECUTION_CANCELLED INTEGER NOT NULL DEFAULT 0)"
         )
         db.execSQL(
             "CREATE TABLE IF NOT EXISTS $GROUPS_TABLE_NAME ($COL_GROUP_ROW_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COL_GROUP_TITLE TEXT, $COL_GROUP_IS_ENABLED INTEGER)"
@@ -81,6 +83,11 @@ class DBHelper private constructor(
                 "CREATE TABLE IF NOT EXISTS $GROUPS_TABLE_NAME ($COL_GROUP_ROW_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COL_GROUP_TITLE TEXT, $COL_GROUP_IS_ENABLED INTEGER)"
             )
             db.execSQL("ALTER TABLE $ALARMS_TABLE_NAME ADD COLUMN $COL_GROUP_ID INTEGER")
+        }
+        if (oldVersion < 4 && newVersion >= 4) {
+            db.execSQL(
+                "ALTER TABLE $ALARMS_TABLE_NAME ADD COLUMN $COL_NEXT_EXECUTION_CANCELLED INTEGER NOT NULL DEFAULT 0"
+            )
         }
     }
 
@@ -139,7 +146,22 @@ class DBHelper private constructor(
             put(COL_LABEL, alarm.label)
             put(COL_ONE_SHOT, alarm.oneShot)
             put(COL_GROUP_ID, alarm.groupId)
+            put(COL_NEXT_EXECUTION_CANCELLED, alarm.isNextExecutionCancelled)
         }
+    }
+
+    /**
+     * Sets/clears the "skip the next occurrence" flag for an alarm without touching anything
+     * else. Used when the user taps "Cancel" on the upcoming-alarm notification (sets it to
+     * true), and by AlarmController when the alarm actually fires and needs to consume the
+     * flag (sets it back to false).
+     */
+    fun updateAlarmNextExecutionCancelled(id: Int, isCancelled: Boolean): Boolean {
+        val selectionArgs = arrayOf(id.toString())
+        val values = ContentValues()
+        values.put(COL_NEXT_EXECUTION_CANCELLED, isCancelled)
+        val selection = "$COL_ID = ?"
+        return mDb.update(ALARMS_TABLE_NAME, values, selection, selectionArgs) == 1
     }
 
     fun getEnabledAlarms() = getAlarms().filter { it.isEnabled }
@@ -156,7 +178,8 @@ class DBHelper private constructor(
             COL_SOUND_URI,
             COL_LABEL,
             COL_ONE_SHOT,
-            COL_GROUP_ID
+            COL_GROUP_ID,
+            COL_NEXT_EXECUTION_CANCELLED
         )
         var cursor: Cursor? = null
         try {
@@ -174,6 +197,8 @@ class DBHelper private constructor(
                         val label = cursor.getStringValue(COL_LABEL)
                         val oneShot = cursor.getIntValue(COL_ONE_SHOT) == 1
                         val groupId = cursor.getIntValueOrNull(COL_GROUP_ID)
+                        val isNextExecutionCancelled =
+                            cursor.getIntValueOrNull(COL_NEXT_EXECUTION_CANCELLED) == 1
 
                         val alarm = Alarm(
                             id = id,
@@ -185,7 +210,8 @@ class DBHelper private constructor(
                             soundUri = soundUri,
                             label = label,
                             oneShot = oneShot,
-                            groupId = groupId
+                            groupId = groupId,
+                            isNextExecutionCancelled = isNextExecutionCancelled
                         )
                         alarms.add(alarm)
                     } catch (e: Exception) {

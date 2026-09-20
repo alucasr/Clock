@@ -29,6 +29,7 @@ const val TIMER_LABEL = "timer_label"
 const val TOGGLE_STOPWATCH = "toggle_stopwatch"
 const val TIMER_MAX_REMINDER_SECS = "timer_max_reminder_secs"
 const val ALARM_MAX_REMINDER_SECS = "alarm_max_reminder_secs"
+const val UPCOMING_ALARM_LEAD_MINUTES = "upcoming_alarm_lead_minutes"
 const val ALARM_LAST_CONFIG = "alarm_last_config"
 const val TIMER_LAST_CONFIG = "timer_last_config"
 const val INCREASE_VOLUME_GRADUALLY = "increase_volume_gradually"
@@ -50,6 +51,7 @@ const val INVALID_ROUTINE_ID = -1
 const val NOTIFICATION_ID = "notification_id"
 const val DEFAULT_ALARM_MINUTES = 480
 const val DEFAULT_MAX_ALARM_REMINDER_SECS = 300
+const val DEFAULT_UPCOMING_ALARM_LEAD_MINUTES = 10
 const val DEFAULT_MAX_TIMER_REMINDER_SECS = 60
 const val SIMPLE_PHONE = "Simple_Phone"
 const val ALARM_NOTIFICATION_CHANNEL_ID = "Alarm_Channel"
@@ -65,8 +67,12 @@ const val OPEN_ROUTINE_TAB_INTENT_ID = 9995
 const val ALARM_NOTIFICATION_ID = 9998
 const val TIMER_RUNNING_NOTIFICATION_ID = 10000
 const val STOPWATCH_RUNNING_NOTIFICATION_ID = 10001
-const val UPCOMING_ALARM_INTENT_ID = 10002
-const val UPCOMING_ALARM_NOTIFICATION_ID = 10003
+// Per-alarm base offsets: actual request code / notification id = BASE + alarm.id, so each
+// alarm gets its own upcoming-alarm PendingIntent/notification instead of every alarm sharing
+// (and overwriting) the same one -- that was why only the last-scheduled alarm's upcoming
+// notification ever showed up, and why "Cancel" on it silently did nothing for others.
+const val UPCOMING_ALARM_INTENT_ID_BASE = 40000
+const val UPCOMING_ALARM_NOTIFICATION_ID_BASE = 50000
 
 const val OPEN_TAB = "open_tab"
 const val TAB_CLOCK = 1
@@ -74,11 +80,11 @@ const val TAB_ALARM = 2
 const val TAB_STOPWATCH = 4
 const val TAB_TIMER = 8
 const val TAB_ROUTINE = 16
-const val TAB_CLOCK_INDEX = 0
-const val TAB_ALARM_INDEX = 1
-const val TAB_STOPWATCH_INDEX = 2
-const val TAB_TIMER_INDEX = 3
-const val TAB_ROUTINE_INDEX = 4
+const val TAB_CLOCK_INDEX = 4
+const val TAB_ALARM_INDEX = 0
+const val TAB_STOPWATCH_INDEX = 3
+const val TAB_TIMER_INDEX = 1
+const val TAB_ROUTINE_INDEX = 2
 
 // routine notification styles
 const val ROUTINE_NOTIFICATION_ID_BASE = 20000

@@ -272,19 +272,20 @@ class MainActivity : SimpleActivity() {
 
     private fun setupTabs() {
         binding.mainTabsHolder.removeAllTabs()
+        // Order: Alarm, Timer, Routines, Stopwatch, Clock (matches TAB_*_INDEX in Constants.kt)
         val tabDrawables = arrayOf(
-            R.drawable.ic_clock_vector,
             R.drawable.ic_alarm_vector,
-            R.drawable.ic_stopwatch_vector,
             R.drawable.ic_hourglass_vector,
-            R.drawable.ic_routine_vector
+            R.drawable.ic_routine_vector,
+            R.drawable.ic_stopwatch_vector,
+            R.drawable.ic_clock_vector
         )
         val tabLabels = arrayOf(
-            R.string.clock,
             org.fossify.commons.R.string.alarm,
-            R.string.stopwatch,
             R.string.timer,
-            R.string.routines
+            R.string.routines,
+            R.string.stopwatch,
+            R.string.clock
         )
 
         tabDrawables.forEachIndexed { i, drawableId ->
@@ -342,19 +343,19 @@ class MainActivity : SimpleActivity() {
     }
 
     private fun getSelectedTabDrawableIds() = arrayOf(
-        R.drawable.ic_clock_filled_vector,
         R.drawable.ic_alarm_filled_vector,
-        R.drawable.ic_stopwatch_filled_vector,
         R.drawable.ic_hourglass_filled_vector,
-        R.drawable.ic_routine_filled_vector
+        R.drawable.ic_routine_filled_vector,
+        R.drawable.ic_stopwatch_filled_vector,
+        R.drawable.ic_clock_filled_vector
     )
 
     private fun getDeselectedTabDrawableIds() = arrayOf(
-        org.fossify.commons.R.drawable.ic_clock_vector,
         R.drawable.ic_alarm_vector,
-        R.drawable.ic_stopwatch_vector,
         R.drawable.ic_hourglass_vector,
-        R.drawable.ic_routine_vector
+        R.drawable.ic_routine_vector,
+        R.drawable.ic_stopwatch_vector,
+        org.fossify.commons.R.drawable.ic_clock_vector
     )
 
     private fun launchSettings() {

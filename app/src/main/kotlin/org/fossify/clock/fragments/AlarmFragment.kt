@@ -196,6 +196,17 @@ class AlarmFragment : Fragment(), ToggleAlarmInterface {
         val safeActivity = activity as? SimpleActivity ?: return
         val groups = safeContext.dbHelper.getGroups().sortedBy { it.title.lowercase() }
 
+        // 8% of screen width on each side, so the row isn't flush against the edges -- taps
+        // near the edge were being intercepted by the system's back-gesture instead of the chip.
+        val screenWidth = resources.displayMetrics.widthPixels
+        val sideMargin = (screenWidth * 0.08f).toInt()
+        binding.alarmGroupsFilterRow.setPadding(
+            sideMargin,
+            binding.alarmGroupsFilterRow.paddingTop,
+            sideMargin,
+            binding.alarmGroupsFilterRow.paddingBottom
+        )
+
         binding.alarmGroupsManageIcon.applyColorFilter(safeContext.getProperTextColor())
         binding.alarmGroupsManageIcon.setOnClickListener {
             ManageGroupsDialog(safeActivity) {

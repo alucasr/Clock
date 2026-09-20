@@ -24,7 +24,7 @@ import org.fossify.clock.extensions.timerHelper
 import org.fossify.clock.helpers.DEFAULT_ALARM_MINUTES
 import org.fossify.clock.helpers.TODAY_BIT
 import org.fossify.clock.helpers.TOMORROW_BIT
-import org.fossify.clock.helpers.UPCOMING_ALARM_NOTIFICATION_ID
+import org.fossify.clock.helpers.UPCOMING_ALARM_NOTIFICATION_ID_BASE
 import org.fossify.clock.helpers.getBitForCalendarDay
 import org.fossify.clock.helpers.getCurrentDayMinutes
 import org.fossify.clock.helpers.getTodayBit
@@ -230,7 +230,7 @@ class IntentHandlerActivity : SimpleActivity() {
                     if (alarm != null) {
                         getSkipUpcomingAlarmPendingIntent(
                             alarmId = alarm.id,
-                            notificationId = UPCOMING_ALARM_NOTIFICATION_ID
+                            notificationId = UPCOMING_ALARM_NOTIFICATION_ID_BASE + alarm.id
                         ).send()
                         EventBus.getDefault().post(AlarmEvent.Refresh)
                         finish()
@@ -307,7 +307,7 @@ class IntentHandlerActivity : SimpleActivity() {
             if (alarms.count() == 1) {
                 getSkipUpcomingAlarmPendingIntent(
                     alarmId = alarms.first().id,
-                    notificationId = UPCOMING_ALARM_NOTIFICATION_ID
+                    notificationId = UPCOMING_ALARM_NOTIFICATION_ID_BASE + alarms.first().id
                 ).send()
                 EventBus.getDefault().post(AlarmEvent.Refresh)
                 finish()
@@ -320,7 +320,7 @@ class IntentHandlerActivity : SimpleActivity() {
                     if (it != null) {
                         getSkipUpcomingAlarmPendingIntent(
                             alarmId = it.id,
-                            notificationId = UPCOMING_ALARM_NOTIFICATION_ID
+                            notificationId = UPCOMING_ALARM_NOTIFICATION_ID_BASE + it.id
                         ).send()
                     }
                     EventBus.getDefault().post(AlarmEvent.Refresh)

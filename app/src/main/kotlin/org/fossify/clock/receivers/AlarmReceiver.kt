@@ -7,7 +7,7 @@ import org.fossify.clock.extensions.alarmController
 import org.fossify.clock.extensions.goAsync
 import org.fossify.clock.extensions.hideNotification
 import org.fossify.clock.helpers.ALARM_ID
-import org.fossify.clock.helpers.UPCOMING_ALARM_NOTIFICATION_ID
+import org.fossify.clock.helpers.UPCOMING_ALARM_NOTIFICATION_ID_BASE
 
 /**
  * Receiver responsible for sounding alarms. It is also responsible for hiding the
@@ -19,13 +19,13 @@ class AlarmReceiver : BroadcastReceiver() {
         val id = intent.getIntExtra(ALARM_ID, -1)
         if (id == -1) return
 
-        cancelUpcomingAlarmNotification(context)
+        cancelUpcomingAlarmNotification(context, id)
         goAsync {
             context.alarmController.onAlarmTriggered(id)
         }
     }
 
-    private fun cancelUpcomingAlarmNotification(context: Context) {
-        context.hideNotification(UPCOMING_ALARM_NOTIFICATION_ID)
+    private fun cancelUpcomingAlarmNotification(context: Context, alarmId: Int) {
+        context.hideNotification(UPCOMING_ALARM_NOTIFICATION_ID_BASE + alarmId)
     }
 }

@@ -11,7 +11,6 @@ import org.fossify.clock.extensions.updateWidgets
 import org.fossify.clock.models.Alarm
 import org.fossify.clock.models.AlarmEvent
 import org.fossify.clock.services.AlarmService
-import org.fossify.commons.extensions.removeBit
 import org.fossify.commons.extensions.showErrorToast
 import org.fossify.commons.helpers.ensureBackgroundThread
 import org.greenrobot.eventbus.EventBus
@@ -54,40 +53,18 @@ class AlarmController(
     }
 
     /**
-     * Skips (cancels) the *next scheduled occurrence* of an alarm before it rings.
-     * If the alarm is repeating, it cancels the upcoming alert and schedules the *following*
-     * occurrence based on repetition rules. If the alarm is a one-time alarm, it cancels and
-     * disables or deletes it.
+     * Marks the *next scheduled occurrence* of an alarm to be skipped, without touching its
+     * schedule at all: [onAlarmTriggered] checks this flag when the alarm fires and, if set,
+     * silently consumes it (clears it back to false) instead of sounding. This is much simpler
+     * and more robust than the previous approach of computing "remaining days" to reschedule
+     * around today, which broke for single-day alarms (see task #16) since skipping the only
+     * configured day left nothing to reschedule.
      *
-     * @param alarmId The ID of the upcoming alarm trigger to skip/cancel.
+     * @param alarmId The ID of the upcoming alarm trigger to skip.
      */
     fun skipNextOccurrence(alarmId: Int) {
         ensureBackgroundThread {
-            val alarm = db.getAlarmWithId(alarmId) ?: return@ensureBackgroundThread
-            context.cancelAlarmClock(alarm)
-
-            // Schedule the *next* occurrence based on the original repeating schedule.
-            if (alarm.isRecurring()) {
-                // TODO: This is a bit of a hack. Skipped alarms should be tracked properly.
-                val todayBitmask = getTodayBit()
-                if (alarm.days and todayBitmask != 0) {
-                    // If there are other days set, schedule based on those remaining days.
-                    val remainingDays = alarm.days.removeBit(todayBitmask)
-                    if (remainingDays > 0) {
-                        val alarmForScheduling = alarm.copy(days = remainingDays)
-                        scheduleNextAlarm(alarmForScheduling)
-                    } else {
-                        // Today was the ONLY weekday set. Skipping it means no weekdays are left.
-                        // TODO: But does this mean the alarm won't be scheduled for next week?
-                    }
-                } else {
-                    // Not scheduled for today anyway, just reschedule the alarm.
-                    scheduleNextAlarm(alarm)
-                }
-            } else {
-                disableOrDeleteOneTimeAlarm(alarm)
-            }
-
+            db.updateAlarmNextExecutionCancelled(alarmId, true)
             notifyObservers()
         }
     }
@@ -95,20 +72,32 @@ class AlarmController(
     /**
      * Handles the triggering of an alarm.
      * If the alarm is repeating, it schedules the next occurrence immediately.
-     * Then, it starts the service for sounding the alarm.
+     * If [Alarm.isNextExecutionCancelled] was set (user tapped "Cancel" on the upcoming-alarm
+     * notification), the flag is cleared and the alarm does NOT sound this time.
+     * Otherwise, it starts the service for sounding the alarm.
      *
      * @param alarmId The ID of the alarm that was triggered.
      */
     fun onAlarmTriggered(alarmId: Int) {
         ensureBackgroundThread {
-            // Reschedule the next occurrence right away
             val alarm = db.getAlarmWithId(alarmId) ?: return@ensureBackgroundThread
+            // Reschedule the next occurrence right away
             if (alarm.isRecurring()) {
                 scheduleNextOccurrence(alarm)
             }
-        }
 
-        sendIntentToService(AlarmService.ACTION_START_ALARM, alarmId)
+            if (alarm.isNextExecutionCancelled) {
+                db.updateAlarmNextExecutionCancelled(alarmId, false)
+                notifyObservers()
+
+                if (!alarm.isRecurring()) {
+                    disableOrDeleteOneTimeAlarm(alarm)
+                }
+                return@ensureBackgroundThread
+            }
+
+            sendIntentToService(AlarmService.ACTION_START_ALARM, alarmId)
+        }
     }
 
     /**

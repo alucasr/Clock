@@ -90,6 +90,12 @@ class Config(context: Context) : BaseConfig(context) {
             putInt(ALARM_MAX_REMINDER_SECS, alarmMaxReminderSecs)
         }
 
+    var upcomingAlarmLeadMinutes: Int
+        get() = prefs.getInt(UPCOMING_ALARM_LEAD_MINUTES, DEFAULT_UPCOMING_ALARM_LEAD_MINUTES)
+        set(upcomingAlarmLeadMinutes) = prefs.edit {
+            putInt(UPCOMING_ALARM_LEAD_MINUTES, upcomingAlarmLeadMinutes)
+        }
+
     var increaseVolumeGradually: Boolean
         get() = prefs.getBoolean(INCREASE_VOLUME_GRADUALLY, true)
         set(increaseVolumeGradually) = prefs.edit {
