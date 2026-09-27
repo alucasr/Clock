@@ -8,7 +8,7 @@ Repo: `~/repos/Clock`. Ver `ARQUITECTURA.md` para decisiones de diseño, convenc
 
 Esquema: `1.<hito>.<fix>` — segundo dígito = hito de funcionalidad, tercero = correctivo/build dentro del hito.
 - **v1.0.x** = fork original de FossifyOrg/Clock con sus errores corregidos, sin features propias aún.
-- **v1.1.x** = grupos de alarmas (v1.1.0 la introduce; v1.1.1/1.1.2/1.1.3 son los correctivos/UI que antes se numeraban 1.0.1/1.0.2/1.0.3 — renumerados el 17-sep-2026, ver `CHANGELOG.md` para el detalle histórico completo).
+- **v1.1.x** = grupos de alarmas (v1.1.0 la introduce; v1.1.1/1.1.2/1.1.3 son los correctivos/UI que antes se numeraban 1.0.1/1.0.2/1.0.3 — renumerados el 17-sep-2026, ver `CHANGELOG.md` para el detalle histórico completo). v1.1.4 (26-sep-2026): notificaciones de alarma perdida/caducada muestran grupo+título.
 - **v1.2.0** = Rutinas (pendiente de tag hasta que el usuario valide la funcionalidad en uso real).
 
 Tags añadidas sobre commits ya existentes (nunca se reescribe historial): `v1.0.0`→352869b, `v1.1.0`→352869b (mismo commit que trajo grupos+fixes juntos), `v1.1.1`→352869b, `v1.1.2`→1bd20fa, `v1.1.3`→1bd20fa. `gradle.properties` (`VERSION_NAME`) y `AppVersionHistory.kt`/`strings.xml` (pantalla "Acerca de") reflejan siempre la numeración vigente (1.1.x), no la antigua.
@@ -56,7 +56,7 @@ Tags añadidas sobre commits ya existentes (nunca se reescribe historial): `v1.0
 - `RoutineHelper.kt` — CRUD async (Room) sobre `Routine`.
 - `RoutineGroupHelper.kt` — CRUD async (Room) sobre `RoutineGroup`. Todas las funciones son async con callback (Room prohíbe queries síncronas en el hilo principal) — seguir ese patrón al extenderlo.
 - `AlarmController.kt` — `onAlarmTriggered()` consulta `Alarm.isNextExecutionCancelled` antes de sonar: si está a true, resetea a false y NO suena (reprograma normal para la siguiente vez); `skipNextOccurrence()` rediseñado para solo marcar el flag, sin tocar el AlarmManager (esto también resolvió el bug heredado #16 de días únicos).
-- `AlarmNotificationHelper.kt`, `TimerHelper.kt`, `Config.kt` (incluye `upcomingAlarmLeadMinutes`, default `DEFAULT_UPCOMING_ALARM_LEAD_MINUTES`=10), `Converters.kt` (TypeConverters Room), `ExportHelper.kt`, `ImportHelper.kt`, `Stopwatch.kt`, `MyAnalogueTimeWidgetProvider.kt`, `MyDigitalTimeWidgetProvider.kt`, `DisabledItemChangeAnimator.kt`.
+- `AlarmNotificationHelper.kt` (notificaciones de alarma perdida/caducada y reemplazada ahora incluyen grupo+título vía `getAlarmDisplayLabel`, 26-sep-2026), `TimerHelper.kt`, `Config.kt` (incluye `upcomingAlarmLeadMinutes`, default `DEFAULT_UPCOMING_ALARM_LEAD_MINUTES`=10), `Converters.kt` (TypeConverters Room), `ExportHelper.kt`, `ImportHelper.kt`, `Stopwatch.kt`, `MyAnalogueTimeWidgetProvider.kt`, `MyDigitalTimeWidgetProvider.kt`, `DisabledItemChangeAnimator.kt`.
 
 ## interfaces/
 - `RoutineDao.kt` — Room DAO tabla `routines`.

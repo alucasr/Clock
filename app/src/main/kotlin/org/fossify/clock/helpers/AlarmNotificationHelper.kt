@@ -9,6 +9,7 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import org.fossify.clock.R
 import org.fossify.clock.activities.AlarmActivity
+import org.fossify.clock.extensions.getAlarmDisplayLabel
 import org.fossify.clock.extensions.getFormattedTime
 import org.fossify.clock.extensions.getOpenAlarmTabIntent
 import org.fossify.clock.extensions.getSnoozePendingIntent
@@ -111,9 +112,15 @@ class AlarmNotificationHelper(private val context: Context) {
             showSeconds = false,
             makeAmPmSmaller = false
         )
+        val displayLabel = context.getAlarmDisplayLabel(missedAlarm)
+        val contentTitle = if (displayLabel.isEmpty()) {
+            context.getString(R.string.missed_alarm)
+        } else {
+            "${context.getString(R.string.missed_alarm)}: $displayLabel"
+        }
         val contentIntent = context.getOpenAlarmTabIntent()
         val notification = NotificationCompat.Builder(context, MISSED_ALARM_NOTIFICATION_CHANNEL_ID)
-            .setContentTitle(context.getString(R.string.missed_alarm))
+            .setContentTitle(contentTitle)
             .setContentText(context.getString(R.string.alarm_timed_out))
             .setContentIntent(contentIntent)
             .setSubText(replacedTime)
@@ -141,9 +148,15 @@ class AlarmNotificationHelper(private val context: Context) {
             showSeconds = false,
             makeAmPmSmaller = false
         )
+        val displayLabel = context.getAlarmDisplayLabel(replacedAlarm)
+        val contentTitle = if (displayLabel.isEmpty()) {
+            context.getString(R.string.missed_alarm)
+        } else {
+            "${context.getString(R.string.missed_alarm)}: $displayLabel"
+        }
         val contentIntent = context.getOpenAlarmTabIntent()
         val notification = NotificationCompat.Builder(context, MISSED_ALARM_NOTIFICATION_CHANNEL_ID)
-            .setContentTitle(context.getString(R.string.missed_alarm))
+            .setContentTitle(contentTitle)
             .setContentText(context.getString(R.string.replaced_by_another_alarm))
             .setContentIntent(contentIntent)
             .setSubText(replacedTime)

@@ -10,6 +10,15 @@ object AppVersionHistory {
     // most recent first
     val entries = listOf(
         VersionHistoryEntry(
+            version = "1.1.4",
+            date = "2026-09-26",
+            changes = listOf(
+                "Las notificaciones de alarma perdida/caducada muestran el grupo y título de la alarma, no solo el aviso genérico",
+                "Ajuste en Ajustes para elegir el punto de inicio de la lista de alarmas",
+                "La pantalla de alarmas muestra por defecto las alarmas desde la hora actual",
+            )
+        ),
+        VersionHistoryEntry(
             version = "1.1.3",
             date = "2026-09-15",
             changes = listOf(
