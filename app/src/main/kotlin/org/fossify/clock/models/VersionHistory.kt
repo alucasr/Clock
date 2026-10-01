@@ -10,29 +10,13 @@ object AppVersionHistory {
     // most recent first
     val entries = listOf(
         VersionHistoryEntry(
-            version = "1.1.6",
-            date = "2026-10-01",
-            changes = listOf(
-                "Interno: la tabla de alarmas de la base de datos pasa a llamarse \"alarms\" (antes \"contacts\", un nombre heredado erróneo). Tus alarmas y grupos se conservan sin cambios",
-            )
-        ),
-        VersionHistoryEntry(
-            version = "1.1.5",
-            date = "2026-09-30",
-            changes = listOf(
-                "Corregido: desactivar un grupo de alarmas ahora SÍ silencia todas sus alarmas (antes solo cambiaba el interruptor)",
-                "Reactivar el grupo restaura cada alarma tal como estaba (las que estaban apagadas siguen apagadas)",
-                "Las alarmas de un grupo desactivado se ven atenuadas y el grupo aparece tachado en los filtros",
-                "El aviso de próxima alarma tampoco aparece para alarmas de grupos desactivados",
-            )
-        ),
-        VersionHistoryEntry(
             version = "1.1.4",
             date = "2026-09-26",
             changes = listOf(
                 "Las notificaciones de alarma perdida/caducada muestran el grupo y título de la alarma, no solo el aviso genérico",
                 "Ajuste en Ajustes para elegir el punto de inicio de la lista de alarmas",
                 "La pantalla de alarmas muestra por defecto las alarmas desde la hora actual",
+                "Corregido: desactivar un grupo de alarmas ahora SÍ silencia todas sus alarmas; reactivarlo las restaura como estaban, y las alarmas del grupo apagado se ven atenuadas",
             )
         ),
         VersionHistoryEntry(

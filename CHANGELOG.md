@@ -4,6 +4,18 @@ Este proyecto es un fork personal de [Fossify Clock](https://github.com/FossifyO
 
 > **Nota sobre versionado (17-sep-2026):** a partir de aquí el segundo dígito de versión indica el hito de funcionalidad: `1.0.x` = fork original corregido, `1.1.x` = grupos de alarmas, `1.2.x` = rutinas (en validación). Las entradas anteriores a esta nota (1.0.0–1.0.3) se dejan tal cual en este fichero como registro histórico; sus tags de git equivalentes son ahora `v1.1.0`/`v1.1.1`/`v1.1.2`/`v1.1.3` — ver tags en el repositorio.
 
+> **Política de versionado (1-oct-2026):** el número de versión sube SOLO por cambios de funcionalidad visibles para el usuario. Correctivos, refactors y renombrados internos son *builds* dentro de la versión vigente: se identifican por el sufijo de build (`1.1.4 b20261001_0905`, fecha-hora de compilación) y por `versionCode` (contador que solo crece), sin tocar `VERSION_NAME` ni crear tag.
+
+## [1.1.4] - 2026-09-26
+
+Funcionalidad:
+- Las notificaciones de alarma perdida/sustituida/caducada muestran grupo y título de la alarma.
+- Ajuste para elegir el punto de inicio de la lista de alarmas; por defecto se muestra desde la hora actual.
+
+Builds posteriores dentro de esta versión (sin cambio de versión):
+- `b20261001_0858` — corregido: desactivar un grupo de alarmas no silenciaba sus alarmas. Ahora el estado efectivo es *alarma encendida Y grupo encendido*; apagar/encender el grupo cancela/arma sus alarmas; el aviso de próxima alarma lo respeta; alarmas de grupos apagados atenuadas y grupo tachado en los filtros.
+- `b20261001_0905` — interno: la tabla de alarmas de la BD pasa de `contacts` (nombre heredado erróneo) a `alarms` (BD v5, migración idempotente, sin pérdida de datos).
+
 ## [1.1.3] - 2026-09-15
 
 Mismo contenido que la antigua v1.0.3 (ver más abajo), renombrada para reflejar el nuevo esquema de versionado.
