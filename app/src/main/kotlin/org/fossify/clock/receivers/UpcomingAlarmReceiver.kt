@@ -44,7 +44,7 @@ class UpcomingAlarmReceiver : BroadcastReceiver() {
 
     private fun showUpcomingAlarmNotification(context: Context, alarmId: Int) {
         val alarm = context.dbHelper.getAlarmWithId(alarmId) ?: return
-        if (!alarm.isEnabled) return
+        if (!context.dbHelper.isAlarmActive(alarm)) return
 
         val notificationManager = context.notificationManager
         NotificationChannel(

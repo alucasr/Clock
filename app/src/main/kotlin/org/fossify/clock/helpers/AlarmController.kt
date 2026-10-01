@@ -81,6 +81,12 @@ class AlarmController(
     fun onAlarmTriggered(alarmId: Int) {
         ensureBackgroundThread {
             val alarm = db.getAlarmWithId(alarmId) ?: return@ensureBackgroundThread
+            // Defensive guard: the group was disabled after this trigger was armed (e.g. a snooze).
+            // Stay silent and leave the alarm's own state untouched.
+            if (!db.isGroupEnabled(alarm.groupId)) {
+                notifyObservers()
+                return@ensureBackgroundThread
+            }
             // Reschedule the next occurrence right away
             if (alarm.isRecurring()) {
                 scheduleNextOccurrence(alarm)
@@ -182,7 +188,35 @@ class AlarmController(
         }
     }
 
+    /**
+     * Applies a group's new enabled state to the system scheduler. Call AFTER the group flag has
+     * been persisted. Disabling cancels the pending intent of every alarm in the group;
+     * enabling schedules those alarms that are individually switched on. The alarms' own
+     * [Alarm.isEnabled] flags are left untouched on purpose (see [DBHelper.getEnabledAlarms]).
+     *
+     * @param groupId The group whose enabled flag just changed.
+     */
+    fun onGroupEnabledChanged(groupId: Int) {
+        ensureBackgroundThread {
+            val groupEnabled = db.isGroupEnabled(groupId)
+            db.getAlarms().filter { it.groupId == groupId && it.isEnabled }.forEach { alarm ->
+                if (groupEnabled) {
+                    scheduleNextAlarm(alarm)
+                } else {
+                    context.cancelAlarmClock(alarm)
+                }
+            }
+            notifyObservers()
+        }
+    }
+
     private fun scheduleNextAlarm(alarm: Alarm, showToast: Boolean = false) {
+        // Single choke point for scheduling: an alarm in a disabled group must never be armed,
+        // no matter which path asked for it (toggle, edit dialog, reboot reschedule, intents).
+        if (!db.isGroupEnabled(alarm.groupId)) {
+            context.cancelAlarmClock(alarm)
+            return
+        }
         val triggerTimeMillis = getTimeOfNextAlarm(alarm)?.timeInMillis ?: return
         context.setupAlarmClock(alarm = alarm, triggerTimeMillis = triggerTimeMillis)
 

@@ -13,6 +13,13 @@
 - **Filtro por grupo**: chips en la pantalla de alarmas para ver solo las de un grupo, u "Todas" con el grupo como prefijo en cada etiqueta.
 - Ver el [CHANGELOG.md](CHANGELOG.md) completo para el detalle de cada versión.
 
+### 📐 Documentación técnica (diagramas Mermaid)
+
+- [Diagrama de clases y modelo de datos](docs/class-diagram.md) — alarmas, grupos, `DBHelper`, `AlarmController`, receivers y la regla de estado efectivo (alarma activa = alarma encendida **y** grupo encendido).
+- [Diagramas de secuencia](docs/sequence-diagrams.md) — activar/desactivar un grupo, guardia de programación, disparo de una alarma y notificación de próxima alarma.
+
+Se visualizan directamente en GitHub o con cualquier visor Mermaid.
+
 ---
 
 

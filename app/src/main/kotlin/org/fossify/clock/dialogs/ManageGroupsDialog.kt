@@ -5,6 +5,7 @@ import org.fossify.clock.R
 import org.fossify.clock.activities.SimpleActivity
 import org.fossify.clock.databinding.DialogManageGroupsBinding
 import org.fossify.clock.databinding.ItemAlarmGroupBinding
+import org.fossify.clock.extensions.alarmController
 import org.fossify.clock.extensions.dbHelper
 import org.fossify.clock.models.AlarmEvent
 import org.fossify.clock.models.AlarmGroup
@@ -73,7 +74,8 @@ class ManageGroupsDialog(val activity: SimpleActivity, val onDismiss: () -> Unit
             groupSwitch.setOnClickListener {
                 val newState = groupSwitch.isChecked
                 activity.dbHelper.updateGroupEnabledState(group.id, newState)
-                EventBus.getDefault().post(AlarmEvent.Refresh)
+                // Arm/cancel the system alarms of this group, not just flip the stored flag.
+                activity.alarmController.onGroupEnabledChanged(group.id)
             }
 
             groupRename.setOnClickListener {
@@ -101,6 +103,7 @@ class ManageGroupsDialog(val activity: SimpleActivity, val onDismiss: () -> Unit
                         negative = R.string.delete_group_keep_alarms,
                     ) { deleteAlarmsToo ->
                         activity.dbHelper.deleteGroup(group.id, deleteAlarmsInGroup = deleteAlarmsToo)
+                        if (!deleteAlarmsToo) activity.alarmController.rescheduleEnabledAlarms()
                         EventBus.getDefault().post(AlarmEvent.Refresh)
                         setupGroupsList()
                     }

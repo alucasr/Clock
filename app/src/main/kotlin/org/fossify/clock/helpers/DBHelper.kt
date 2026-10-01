@@ -164,7 +164,28 @@ class DBHelper private constructor(
         return mDb.update(ALARMS_TABLE_NAME, values, selection, selectionArgs) == 1
     }
 
-    fun getEnabledAlarms() = getAlarms().filter { it.isEnabled }
+    /**
+     * Returns the alarms that are *effectively* active: switched on AND not belonging to a
+     * disabled group. An alarm's own [Alarm.isEnabled] flag is never modified by group toggling,
+     * so re-enabling a group restores each alarm exactly as the user had left it.
+     */
+    fun getEnabledAlarms(): List<Alarm> {
+        val disabledGroupIds = getDisabledGroupIds()
+        return getAlarms().filter { it.isEnabled && it.groupId !in disabledGroupIds }
+    }
+
+    /** IDs of all groups currently switched off. Alarms in these groups must not ring. */
+    fun getDisabledGroupIds(): Set<Int> =
+        getGroups().filter { !it.isEnabled }.map { it.id }.toSet()
+
+    /** True if [groupId] is null (ungrouped), unknown, or enabled. */
+    fun isGroupEnabled(groupId: Int?): Boolean {
+        if (groupId == null) return true
+        return getGroupWithId(groupId)?.isEnabled ?: true
+    }
+
+    /** Effective state: the alarm's own switch AND its group's switch. */
+    fun isAlarmActive(alarm: Alarm) = alarm.isEnabled && isGroupEnabled(alarm.groupId)
 
     fun getAlarms(): ArrayList<Alarm> {
         val alarms = ArrayList<Alarm>()

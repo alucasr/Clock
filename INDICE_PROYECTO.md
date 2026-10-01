@@ -8,10 +8,14 @@ Repo: `~/repos/Clock`. Ver `ARQUITECTURA.md` para decisiones de diseño, convenc
 
 Esquema: `1.<hito>.<fix>` — segundo dígito = hito de funcionalidad, tercero = correctivo/build dentro del hito.
 - **v1.0.x** = fork original de FossifyOrg/Clock con sus errores corregidos, sin features propias aún.
-- **v1.1.x** = grupos de alarmas (v1.1.0 la introduce; v1.1.1/1.1.2/1.1.3 son los correctivos/UI que antes se numeraban 1.0.1/1.0.2/1.0.3 — renumerados el 17-sep-2026, ver `CHANGELOG.md` para el detalle histórico completo). v1.1.4 (26-sep-2026): notificaciones de alarma perdida/caducada muestran grupo+título.
+- **v1.1.x** = grupos de alarmas (v1.1.0 la introduce; v1.1.1/1.1.2/1.1.3 son los correctivos/UI que antes se numeraban 1.0.1/1.0.2/1.0.3 — renumerados el 17-sep-2026, ver `CHANGELOG.md` para el detalle histórico completo). v1.1.4 (26-sep-2026, instalada en Pixel 7 el 29-sep-2026): notificaciones de alarma perdida/caducada muestran grupo+título. v1.1.5 (30-sep-2026): corrige que desactivar un GRUPO no silenciaba sus alarmas (el flag `alarm_groups.is_enabled` se guardaba pero nunca se leía en la programación).
 - **v1.2.0** = Rutinas (pendiente de tag hasta que el usuario valide la funcionalidad en uso real).
 
-Tags añadidas sobre commits ya existentes (nunca se reescribe historial): `v1.0.0`→352869b, `v1.1.0`→352869b (mismo commit que trajo grupos+fixes juntos), `v1.1.1`→352869b, `v1.1.2`→1bd20fa, `v1.1.3`→1bd20fa. `gradle.properties` (`VERSION_NAME`) y `AppVersionHistory.kt`/`strings.xml` (pantalla "Acerca de") reflejan siempre la numeración vigente (1.1.x), no la antigua.
+Tags añadidas sobre commits ya existentes (nunca se reescribe historial): `v1.0.0`→352869b, `v1.1.0`→352869b (mismo commit que trajo grupos+fixes juntos), `v1.1.1`→352869b, `v1.1.2`→1bd20fa, `v1.1.3`→1bd20fa, `v1.1.4`→641503e. `gradle.properties` (`VERSION_NAME`) y `AppVersionHistory.kt`/`strings.xml` (pantalla "Acerca de") reflejan siempre la numeración vigente (1.1.x), no la antigua.
+
+## docs/
+- `class-diagram.md` — diagrama de clases (Mermaid) + modelo de datos SQLite + regla de estado efectivo alarma/grupo.
+- `sequence-diagrams.md` — secuencias (Mermaid): toggle de grupo, guardia de programación, disparo de alarma, aviso de próxima alarma.
 
 ## activities/
 - `MainActivity.kt` — actividad host del ViewPager de 5 pestañas, orden actual: **Alarmas, Temporizador, Rutinas, Cronómetro, Reloj** (cambiado 20-sep-2026 vía `TAB_*_INDEX` en Constants.kt + arrays de drawables en `setupTabs`/`getSelectedTabDrawableIds`/`getDeselectedTabDrawableIds`), `getInactiveTabIndexes`.

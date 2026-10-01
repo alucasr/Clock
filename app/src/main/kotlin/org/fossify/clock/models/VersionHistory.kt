@@ -10,6 +10,16 @@ object AppVersionHistory {
     // most recent first
     val entries = listOf(
         VersionHistoryEntry(
+            version = "1.1.5",
+            date = "2026-09-30",
+            changes = listOf(
+                "Corregido: desactivar un grupo de alarmas ahora SÍ silencia todas sus alarmas (antes solo cambiaba el interruptor)",
+                "Reactivar el grupo restaura cada alarma tal como estaba (las que estaban apagadas siguen apagadas)",
+                "Las alarmas de un grupo desactivado se ven atenuadas y el grupo aparece tachado en los filtros",
+                "El aviso de próxima alarma tampoco aparece para alarmas de grupos desactivados",
+            )
+        ),
+        VersionHistoryEntry(
             version = "1.1.4",
             date = "2026-09-26",
             changes = listOf(

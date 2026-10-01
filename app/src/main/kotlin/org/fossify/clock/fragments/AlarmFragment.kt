@@ -156,6 +156,7 @@ class AlarmFragment : Fragment(), ToggleAlarmInterface {
         val safeContext = context ?: return
         val groupTitles = safeContext.dbHelper.getGroups().associate { it.id to it.title }
         val showGroupPrefix = selectedGroupFilterId == null
+        val disabledGroupIds = safeContext.dbHelper.getDisabledGroupIds()
         getSortedAlarms { sortedAlarms ->
             val filteredAlarms = if (selectedGroupFilterId == null) {
                 sortedAlarms
@@ -173,6 +174,7 @@ class AlarmFragment : Fragment(), ToggleAlarmInterface {
                     recyclerView = binding.alarmsList,
                     groupTitles = groupTitles,
                     showGroupPrefix = showGroupPrefix,
+                    disabledGroupIds = disabledGroupIds,
                 ) {
                     openEditAlarm(it as Alarm)
                 }.apply {
@@ -183,7 +185,7 @@ class AlarmFragment : Fragment(), ToggleAlarmInterface {
                     updatePrimaryColor()
                     updateBackgroundColor(safeActivity.getProperBackgroundColor())
                     updateTextColor(safeActivity.getProperTextColor())
-                    updateItems(alarms, groupTitles, showGroupPrefix)
+                    updateItems(alarms, groupTitles, showGroupPrefix, disabledGroupIds)
                 }
             }
             binding.alarmsPlaceholder.beVisibleIf(alarms.isEmpty())
@@ -277,10 +279,15 @@ class AlarmFragment : Fragment(), ToggleAlarmInterface {
         val primaryColor = safeContext.getProperPrimaryColor()
         val textColor = safeContext.getProperTextColor()
 
-        fun addChip(id: Int?, title: String) {
+        fun addChip(id: Int?, title: String, groupEnabled: Boolean = true) {
             val chipBinding = ItemGroupChipBinding.inflate(layoutInflater, binding.alarmGroupsFilterHolder, false)
             chipBinding.groupChipText.apply {
                 text = title
+                paintFlags = if (groupEnabled) {
+                    paintFlags and android.graphics.Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                } else {
+                    paintFlags or android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
+                }
                 background = background.mutate()
                 val isSelected = selectedGroupFilterId == id
                 setTextColor(if (isSelected) safeContext.getProperBackgroundColor() else textColor)
@@ -298,7 +305,7 @@ class AlarmFragment : Fragment(), ToggleAlarmInterface {
 
         addChip(null, getString(R.string.all_groups))
         groups.forEach { group ->
-            addChip(group.id, group.title)
+            addChip(group.id, group.title, group.isEnabled)
         }
     }
 

@@ -39,6 +39,7 @@ class AlarmsAdapter(
     recyclerView: MyRecyclerView,
     private var groupTitles: Map<Int, String> = emptyMap(),
     private var showGroupPrefix: Boolean = false,
+    private var disabledGroupIds: Set<Int> = emptySet(),
     itemClick: (Any) -> Unit,
 ) : MyRecyclerViewAdapter(activity, recyclerView, itemClick), ItemTouchHelperContract {
 
@@ -115,6 +116,7 @@ class AlarmsAdapter(
         newItems: ArrayList<Alarm>,
         newGroupTitles: Map<Int, String>? = null,
         newShowGroupPrefix: Boolean? = null,
+        newDisabledGroupIds: Set<Int>? = null,
     ) {
         alarms = newItems
         if (newGroupTitles != null) {
@@ -122,6 +124,9 @@ class AlarmsAdapter(
         }
         if (newShowGroupPrefix != null) {
             showGroupPrefix = newShowGroupPrefix
+        }
+        if (newDisabledGroupIds != null) {
+            disabledGroupIds = newDisabledGroupIds
         }
         notifyDataSetChanged()
         finishActMode()
@@ -170,6 +175,9 @@ class AlarmsAdapter(
             alarmLabel.text = buildDisplayLabel(alarm)
             alarmLabel.setTextColor(textColor)
             alarmLabel.beVisibleIf(alarm.label.isNotEmpty() || (showGroupPrefix && alarm.groupId != null))
+
+            // Alarms of a disabled group are shown dimmed: they will not ring even if switched on.
+            alarmHolder.alpha = if (alarm.groupId in disabledGroupIds) 0.4f else 1f
 
             alarmSwitch.isChecked = alarm.isEnabled
             alarmSwitch.setColors(textColor, properPrimaryColor, backgroundColor)
