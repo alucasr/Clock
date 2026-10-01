@@ -75,7 +75,7 @@ classDiagram
 
 | Table | Column | Notes |
 |---|---|---|
-| `alarms` | `id`, `time_in_minutes`, `days`, `is_enabled`, `vibrate`, `sound_*`, `label`, `one_shot`, `next_execution_cancelled` | `is_enabled` is the alarm's **own** switch |
+| `alarms` (hasta v1.1.5: `contacts`, nombre heredado erróneo; renombrada en BD v5) | `id`, `time_in_minutes`, `days`, `is_enabled`, `vibrate`, `sound_*`, `label`, `one_shot`, `next_execution_cancelled` | `is_enabled` is the alarm's **own** switch |
 | `alarms` | `group_id` | nullable; `NULL` = ungrouped. No SQL foreign key: integrity is kept in code (`deleteGroup`) |
 | `alarm_groups` | `id`, `title`, `is_enabled` | `is_enabled` is the group's switch |
 

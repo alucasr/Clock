@@ -26,7 +26,8 @@ class DBHelper private constructor(
     val context: Context,
 ) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
 
-    private val ALARMS_TABLE_NAME = "contacts"  // wrong table name, ignore it
+    /** Alarms table. Up to DB v4 it was misnamed [LEGACY_ALARMS_TABLE_NAME]; renamed in v5. */
+    private val ALARMS_TABLE_NAME = "alarms"
     private val COL_ID = "id"
     private val COL_TIME_IN_MINUTES = "time_in_minutes"
     private val COL_DAYS = "days"
@@ -47,7 +48,10 @@ class DBHelper private constructor(
     private val mDb = writableDatabase
 
     companion object {
-        private const val DB_VERSION = 4
+        private const val DB_VERSION = 5
+
+        /** Historical (wrong) name of the alarms table, inherited from the original app. */
+        private const val LEGACY_ALARMS_TABLE_NAME = "contacts"
         const val DB_NAME = "alarms.db"
 
         @SuppressLint("StaticFieldLeak")
@@ -76,18 +80,37 @@ class DBHelper private constructor(
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         if (oldVersion == 1 && newVersion > oldVersion) {
-            db.execSQL("ALTER TABLE $ALARMS_TABLE_NAME ADD COLUMN $COL_ONE_SHOT INTEGER NOT NULL DEFAULT 0")
+            db.execSQL("ALTER TABLE $LEGACY_ALARMS_TABLE_NAME ADD COLUMN $COL_ONE_SHOT INTEGER NOT NULL DEFAULT 0")
         }
         if (oldVersion < 3 && newVersion >= 3) {
             db.execSQL(
                 "CREATE TABLE IF NOT EXISTS $GROUPS_TABLE_NAME ($COL_GROUP_ROW_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COL_GROUP_TITLE TEXT, $COL_GROUP_IS_ENABLED INTEGER)"
             )
-            db.execSQL("ALTER TABLE $ALARMS_TABLE_NAME ADD COLUMN $COL_GROUP_ID INTEGER")
+            db.execSQL("ALTER TABLE $LEGACY_ALARMS_TABLE_NAME ADD COLUMN $COL_GROUP_ID INTEGER")
         }
         if (oldVersion < 4 && newVersion >= 4) {
             db.execSQL(
-                "ALTER TABLE $ALARMS_TABLE_NAME ADD COLUMN $COL_NEXT_EXECUTION_CANCELLED INTEGER NOT NULL DEFAULT 0"
+                "ALTER TABLE $LEGACY_ALARMS_TABLE_NAME ADD COLUMN $COL_NEXT_EXECUTION_CANCELLED INTEGER NOT NULL DEFAULT 0"
             )
+        }
+        if (oldVersion < 5 && newVersion >= 5) {
+            renameLegacyAlarmsTable(db)
+        }
+    }
+
+    /**
+     * v5: renames the misnamed `contacts` table to `alarms`. SQLite's RENAME keeps all rows, ids,
+     * the AUTOINCREMENT counter and indexes. Idempotent: does nothing unless the legacy table
+     * exists and the new one does not (e.g. a half-applied upgrade).
+     */
+    private fun renameLegacyAlarmsTable(db: SQLiteDatabase) {
+        fun tableExists(name: String): Boolean =
+            db.rawQuery(
+                "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?", arrayOf(name)
+            ).use { it.moveToFirst() }
+
+        if (tableExists(LEGACY_ALARMS_TABLE_NAME) && !tableExists(ALARMS_TABLE_NAME)) {
+            db.execSQL("ALTER TABLE $LEGACY_ALARMS_TABLE_NAME RENAME TO $ALARMS_TABLE_NAME")
         }
     }
 

@@ -10,6 +10,13 @@ object AppVersionHistory {
     // most recent first
     val entries = listOf(
         VersionHistoryEntry(
+            version = "1.1.6",
+            date = "2026-10-01",
+            changes = listOf(
+                "Interno: la tabla de alarmas de la base de datos pasa a llamarse \"alarms\" (antes \"contacts\", un nombre heredado erróneo). Tus alarmas y grupos se conservan sin cambios",
+            )
+        ),
+        VersionHistoryEntry(
             version = "1.1.5",
             date = "2026-09-30",
             changes = listOf(
