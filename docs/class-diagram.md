@@ -13,7 +13,7 @@ classDiagram
         +Boolean isEnabled
         +Boolean vibrate
         +String label
-        +Boolean oneShot
+        +Boolean oneShot  %% single use: deleted after ringing
         +Int? groupId
         +Boolean isNextExecutionCancelled
         +isRecurring() Boolean

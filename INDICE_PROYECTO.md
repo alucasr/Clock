@@ -11,9 +11,10 @@ Repo: `~/repos/Clock`. Ver `ARQUITECTURA.md` para decisiones de diseño, convenc
 Esquema: `1.<hito>.<n>` — segundo dígito = hito de funcionalidad; tercero = funcionalidad menor dentro del hito.
 - **v1.0.x** = fork original de FossifyOrg/Clock con sus errores corregidos, sin features propias aún.
 - **v1.1.x** = grupos de alarmas (v1.1.0 la introduce; v1.1.1/1.1.2/1.1.3 son correctivos/UI numerados antes de esta política, renumerados el 17-sep-2026, ver `CHANGELOG.md`). **v1.1.4** (26-sep-2026): notificaciones de alarma perdida/caducada con grupo+título, ajuste de inicio de lista. Builds dentro de 1.1.4: `b20261001_0858` (fix: desactivar un grupo silencia sus alarmas) y `b20261001_0905` (tabla `contacts`→`alarms`, BD v5).
+- **v1.1.5** (1-oct-2026): alarmas de un solo uso (`Alarm.oneShot`, check en `EditAlarmDialog`, borrado en `AlarmController.disableOrDeleteOneTimeAlarm`).
 - **v1.2.0** = Rutinas (pendiente de tag hasta que el usuario valide la funcionalidad en uso real).
 
-Tags: `v1.0.0`→352869b, `v1.1.0`→352869b, `v1.1.1`→352869b, `v1.1.2`→1bd20fa, `v1.1.3`→1bd20fa, `v1.1.4`→641503e (commit de la funcionalidad; los builds posteriores no llevan tag). Los tags `v1.1.5`/`v1.1.6` se crearon por error el 1-oct-2026 y se eliminaron al adoptar esta política. `gradle.properties` (`VERSION_NAME`) y `AppVersionHistory.kt` reflejan siempre la versión vigente.
+Tags: `v1.0.0`→352869b, `v1.1.0`→352869b, `v1.1.1`→352869b, `v1.1.2`→1bd20fa, `v1.1.3`→1bd20fa, `v1.1.4`→641503e, `v1.1.5`→d291eaa (commit de la funcionalidad; los builds posteriores no llevan tag). Los tags `v1.1.5`/`v1.1.6` se crearon por error el 1-oct-2026 y se eliminaron al adoptar esta política. `gradle.properties` (`VERSION_NAME`) y `AppVersionHistory.kt` reflejan siempre la versión vigente.
 
 ## docs/
 - `class-diagram.md` — diagrama de clases (Mermaid) + modelo de datos SQLite + regla de estado efectivo alarma/grupo.

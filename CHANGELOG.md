@@ -6,6 +6,11 @@ Este proyecto es un fork personal de [Fossify Clock](https://github.com/FossifyO
 
 > **Política de versionado (1-oct-2026):** el número de versión sube SOLO por cambios de funcionalidad visibles para el usuario. Correctivos, refactors y renombrados internos son *builds* dentro de la versión vigente: se identifican por el sufijo de build (`1.1.4 b20261001_0905`, fecha-hora de compilación) y por `versionCode` (contador que solo crece), sin tocar `VERSION_NAME` ni crear tag.
 
+## [1.1.5] - 2026-10-01
+
+Funcionalidad:
+- Alarmas de un solo uso: check "Un solo uso" al crear/editar una alarma sin días repetidos; se elimina sola tras sonar (también si se pierde o se omite) o si se apaga antes de sonar (con aviso). Etiqueta "un solo uso" en la lista. Reutiliza `Alarm.oneShot` y la columna `one_shot` ya existentes: sin migración de BD.
+
 ## [1.1.4] - 2026-09-26
 
 Funcionalidad:
