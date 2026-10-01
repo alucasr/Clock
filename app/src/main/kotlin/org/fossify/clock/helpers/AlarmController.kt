@@ -87,8 +87,9 @@ class AlarmController(
                 notifyObservers()
                 return@ensureBackgroundThread
             }
-            // Reschedule the next occurrence right away
-            if (alarm.isRecurring()) {
+            // Reschedule the next occurrence right away -- except for single-use alarms, which
+            // must ring exactly once even when they have repeat days (e.g. "this Saturday only").
+            if (alarm.isRecurring() && !alarm.oneShot) {
                 scheduleNextOccurrence(alarm)
             }
 
@@ -96,7 +97,7 @@ class AlarmController(
                 db.updateAlarmNextExecutionCancelled(alarmId, false)
                 notifyObservers()
 
-                if (!alarm.isRecurring()) {
+                if (!alarm.isRecurring() || alarm.oneShot) {
                     disableOrDeleteOneTimeAlarm(alarm)
                 }
                 return@ensureBackgroundThread
@@ -129,8 +130,9 @@ class AlarmController(
         ensureBackgroundThread {
             val alarm = db.getAlarmWithId(alarmId)
 
-            // We don't reschedule alarms here.
-            if (alarm != null && !alarm.isRecurring()) {
+            // We don't reschedule alarms here. A single-use alarm is finished after ringing even
+            // if it has repeat days.
+            if (alarm != null && (!alarm.isRecurring() || alarm.oneShot)) {
                 context.cancelAlarmClock(alarm)
                 disableOrDeleteOneTimeAlarm(alarm)
             }
@@ -169,14 +171,15 @@ class AlarmController(
     }
 
     /**
-     * Handles disabling or deleting a *one-time* (non-repeating) alarm based on `oneShot` property.
+     * Handles disabling or deleting an alarm that has finished its only run: either a
+     * non-repeating alarm, or a repeating alarm flagged `oneShot` (single use).
      * This is typically called after a one-time alarm has rung and been dismissed or stopped,
      * or when it's explicitly skipped.
      *
-     * @param alarm The one-time alarm to disable or delete. Must not be repeating.
+     * @param alarm The finished alarm. Must be non-repeating or flagged `oneShot`.
      */
     private fun disableOrDeleteOneTimeAlarm(alarm: Alarm) {
-        require(!alarm.isRecurring()) {
+        require(!alarm.isRecurring() || alarm.oneShot) {
             "Alarm ${alarm.id} is repeating but was passed to disableOrDeleteOneTimeAlarm()"
         }
 

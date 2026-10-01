@@ -13,7 +13,7 @@ object AppVersionHistory {
             version = "1.1.5",
             date = "2026-10-01",
             changes = listOf(
-                "Nuevo: alarmas de un solo uso. Al crear una alarma sin días repetidos puedes marcar \"Un solo uso\": se elimina sola después de sonar (o si la apagas antes de que suene)",
+                "Nuevo: alarmas de un solo uso. Puedes marcar \"Un solo uso\" al crear una alarma, con o sin días repetidos: suena una vez (p. ej. el próximo sábado) y se elimina sola, sin volver a sonar la semana siguiente. También se elimina si la apagas antes de que suene",
                 "Las alarmas de un solo uso se distinguen en la lista con la etiqueta \"un solo uso\"",
             )
         ),

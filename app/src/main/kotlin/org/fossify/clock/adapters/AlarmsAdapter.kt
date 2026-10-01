@@ -199,7 +199,8 @@ class AlarmsAdapter(
 
     private fun toggleAlarm(binding: ItemAlarmBinding, alarm: Alarm) {
         val isBeingDisabled = !binding.alarmSwitch.isChecked
-        if (alarm.isRecurring() && isBeingDisabled) {
+        // Single-use alarms have nothing to "skip": switching them off simply deletes them.
+        if (alarm.isRecurring() && !alarm.oneShot && isBeingDisabled) {
             // Ask whether to skip just the next occurrence or disable the alarm completely.
             // Revert the switch to "on" immediately -- it only reflects the final choice once
             // the user picks an option (or stays on if the dialog is dismissed without one).
@@ -251,12 +252,13 @@ class AlarmsAdapter(
         alarm: Alarm, isEnabled: Boolean = alarm.isEnabled,
     ): String {
         if (alarm.isRecurring()) {
-            return if (alarm.days == EVERY_DAY_BIT) {
+            val daysText = if (alarm.days == EVERY_DAY_BIT) {
                 activity.getString(org.fossify.commons.R.string.every_day)
             } else {
                 // TODO: This does not respect config.firstDayOfWeek
                 activity.getSelectedDaysString(alarm.days)
             }
+            return if (alarm.oneShot) "$daysText · ${resources.getString(R.string.single_use_tag)}" else daysText
         }
 
         val dayText = when {

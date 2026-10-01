@@ -9,7 +9,10 @@ Este proyecto es un fork personal de [Fossify Clock](https://github.com/FossifyO
 ## [1.1.5] - 2026-10-01
 
 Funcionalidad:
-- Alarmas de un solo uso: check "Un solo uso" al crear/editar una alarma sin días repetidos; se elimina sola tras sonar (también si se pierde o se omite) o si se apaga antes de sonar (con aviso). Etiqueta "un solo uso" en la lista. Reutiliza `Alarm.oneShot` y la columna `one_shot` ya existentes: sin migración de BD.
+- Alarmas de un solo uso: check "Un solo uso" al crear/editar una alarma, con o sin días repetidos. Con días (ej. sábado 9:00) suena en la próxima ocurrencia, se elimina y no vuelve a sonar la semana siguiente. Se elimina tras sonar (también si se pierde o se omite) o si se apaga antes de sonar (con aviso; no se pregunta "saltar solo la próxima"). Etiqueta "un solo uso" en la lista. Reutiliza `Alarm.oneShot` / columna `one_shot`: sin migración de BD.
+
+Builds posteriores dentro de esta versión (sin cambio de versión):
+- `b20261001_1145` — la combinación un solo uso + días repetidos pasa a estar permitida (antes el check solo salía sin días).
 
 ## [1.1.4] - 2026-09-26
 
