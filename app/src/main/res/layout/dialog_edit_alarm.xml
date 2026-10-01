@@ -44,10 +44,44 @@
             android:orientation="horizontal" />
 
         <RelativeLayout
-            android:id="@+id/edit_alarm_vibrate_holder"
+            android:id="@+id/edit_alarm_single_use_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/edit_alarm_days_holder"
+            android:background="?attr/selectableItemBackground"
+            android:paddingStart="@dimen/activity_margin"
+            android:paddingTop="@dimen/medium_margin"
+            android:paddingEnd="@dimen/activity_margin"
+            android:paddingBottom="@dimen/medium_margin"
+            android:textSize="@dimen/bigger_text_size">
+
+            <ImageView
+                android:id="@+id/edit_alarm_single_use_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/edit_alarm_single_use"
+                android:layout_alignBottom="@+id/edit_alarm_single_use"
+                android:src="@drawable/ic_alarm_off_vector" />
+
+            <org.fossify.commons.views.MyAppCompatCheckbox
+                android:id="@+id/edit_alarm_single_use"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_toEndOf="@+id/edit_alarm_single_use_icon"
+                android:background="@null"
+                android:clickable="false"
+                android:layoutDirection="rtl"
+                android:padding="@dimen/medium_margin"
+                android:text="@string/single_use" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/edit_alarm_vibrate_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edit_alarm_single_use_holder"
             android:background="?attr/selectableItemBackground"
             android:paddingStart="@dimen/activity_margin"
             android:paddingTop="@dimen/medium_margin"

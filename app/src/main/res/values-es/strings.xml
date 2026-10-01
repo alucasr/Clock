@@ -62,6 +62,9 @@
     <string name="missed_alarm">Alarma perdida</string>
     <string name="replaced_by_another_alarm">Sustituida por otra alarma</string>
     <string name="not_scheduled">No programado</string>
+    <string name="single_use">Un solo uso (se elimina al sonar)</string>
+    <string name="single_use_tag">un solo uso</string>
+    <string name="single_use_deleted">Alarma de un solo uso eliminada</string>
     <string name="alarm_timed_out">Alarma caducada</string>
 
     <!-- Grupos de alarmas -->

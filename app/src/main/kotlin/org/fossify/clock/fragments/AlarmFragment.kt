@@ -327,7 +327,9 @@ class AlarmFragment : Fragment(), ToggleAlarmInterface {
                     alarm.isEnabled = isEnabled
                     checkAlarmState(alarm)
                     if (!alarm.isEnabled && alarm.oneShot) {
+                        // Single-use alarm switched off before ringing: it is no longer needed.
                         requireContext().dbHelper.deleteAlarms(arrayListOf(alarm))
+                        requireActivity().toast(R.string.single_use_deleted)
                         setupAlarms()
                     }
                 } else {

@@ -10,6 +10,14 @@ object AppVersionHistory {
     // most recent first
     val entries = listOf(
         VersionHistoryEntry(
+            version = "1.1.5",
+            date = "2026-10-01",
+            changes = listOf(
+                "Nuevo: alarmas de un solo uso. Al crear una alarma sin días repetidos puedes marcar \"Un solo uso\": se elimina sola después de sonar (o si la apagas antes de que suene)",
+                "Las alarmas de un solo uso se distinguen en la lista con la etiqueta \"un solo uso\"",
+            )
+        ),
+        VersionHistoryEntry(
             version = "1.1.4",
             date = "2026-09-26",
             changes = listOf(

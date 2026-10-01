@@ -119,6 +119,15 @@ class EditAlarmDialog(
                 alarm.vibrate = editAlarmVibrate.isChecked
             }
 
+            // "Single use": the alarm deletes itself after ringing. Only offered for alarms
+            // without repeat days -- it makes no sense for a recurring alarm.
+            editAlarmSingleUseIcon.setColorFilter(textColor)
+            editAlarmSingleUse.isChecked = alarm.oneShot
+            editAlarmSingleUseHolder.setOnClickListener {
+                editAlarmSingleUse.toggle()
+                alarm.oneShot = editAlarmSingleUse.isChecked
+            }
+
             editAlarmLabelImage.applyColorFilter(textColor)
             editAlarm.setText(alarm.label)
 
@@ -189,7 +198,9 @@ class EditAlarmDialog(
 
                         alarm.label = binding.editAlarm.value
                         alarm.isEnabled = true
-                        alarm.oneShot = false
+                        // Never keep the flag on a recurring alarm (the user may have ticked it
+                        // and then picked repeat days).
+                        alarm.oneShot = binding.editAlarmSingleUse.isChecked && !alarm.isRecurring()
 
                         var alarmId = alarm.id
                         activity.handleFullScreenNotificationsPermission { granted ->
@@ -257,6 +268,7 @@ class EditAlarmDialog(
             binding.editAlarmDaylessLabel.text = "(${activity.getString(textId)})"
         }
         binding.editAlarmDaylessLabel.beVisibleIf(!alarm.isRecurring())
+        binding.editAlarmSingleUseHolder.beVisibleIf(!alarm.isRecurring())
     }
 
     private fun getProperDayDrawable(selected: Boolean): Drawable {

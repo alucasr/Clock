@@ -259,11 +259,12 @@ class AlarmsAdapter(
             }
         }
 
-        return when {
+        val dayText = when {
             !isEnabled -> resources.getString(R.string.not_scheduled)
             alarm.isToday() -> resources.getString(org.fossify.commons.R.string.today)
             else -> resources.getString(org.fossify.commons.R.string.tomorrow)
         }
+        return if (alarm.oneShot) "$dayText · ${resources.getString(R.string.single_use_tag)}" else dayText
     }
 
     override fun onRowMoved(fromPosition: Int, toPosition: Int) {
